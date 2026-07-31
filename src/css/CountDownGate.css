@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&display=swap');
+
+.countdown-gate {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  background: #ffffff;
+}
+
+.countdown-row {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(1rem, 4vw, 2.25rem);
+}
+
+.unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.digit-pair {
+  display: flex;
+}
+
+.digit-window {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  height: clamp(2.5rem, 9vw, 4.5rem);
+  width: clamp(1.5rem, 5.5vw, 2.6rem);
+}
+
+.digit {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-size: clamp(2.5rem, 9vw, 4.5rem);
+  color: #1a1a1a;
+  line-height: 1;
+}
+
+.unit-label {
+  font-family: 'Fraunces', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9a9a9a;
+}
+
+.countdown-hint {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: #7c5cbf;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .digit {
+    transition: none;
+  }
+}
