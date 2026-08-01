@@ -4,6 +4,7 @@ import CountdownGate from './components/CountdownGate';
 import GalacticReveal from './components/Page1';
 import FlowerBurst from './components/Page2';
 import MessageScene from './components/Page3';
+import Timeline from './components/Page4';
 // Page4, Page5, Page6, Page7, Page8 — uncomment as each is built:
 // import Timeline      from './components/Page4';
 // import Gallery       from './components/Page5';
@@ -57,6 +58,15 @@ export default function App() {
           onNext={() => go('timeline')}
         />
       )}
+
+      {scene === 'timeline' && (
+        <Timeline
+          key="timeline"
+          onNext={() => go('gallery')}
+        />
+      )}
+
+      
 
       {/* Uncomment each block as the page is built: */}
 

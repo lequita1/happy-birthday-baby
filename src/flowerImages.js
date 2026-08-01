@@ -10,10 +10,10 @@
 // ─────────────────────────────────────────────────────────────
 
 export const flowerImages = [
-  '/flowers/flower1.png',
-  '/flowers/flower2.png',
-  '/flowers/flower3.png',
-  '/flowers/flower4.png',
-  '/flowers/flower5.png',
-  '/flowers/flower6.png',
-];
+  '../public/flower-images/flower1.png',
+  '../public/flower-images/flower2.png',
+  '../public/flower-images/flower3.png',
+  '../public/flower-images/flower4.png',
+  '../public/flower-images/flower5.png',
+  '../public/flower-images/flower6.png',
+];  

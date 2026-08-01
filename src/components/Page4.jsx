@@ -5,31 +5,39 @@ import '../css/Page4.css';
 // ─────────────────────────────────────────────────────────────
 // Page4 — Timeline (baby → present)
 //
-// Data-driven from timelineData.js — edit that file to add,
-// remove, or reorder entries. Nothing here needs to change.
+// Single-column layout at every screen size — no alternating
+// left/right columns. That approach looked cramped on mobile
+// and small on desktop since each card only got ~44% width;
+// this way every card gets full width up to a generous max,
+// and the same markup/CSS works everywhere.
+//
+// Data-driven from timelineData.js — edit that file only.
 // ─────────────────────────────────────────────────────────────
 
 const HEADING_TEXT = 'every step got us here';
 
 function TimelineEntry({ entry, index, reduceMotion }) {
-  const side = index % 2 === 0 ? 'left' : 'right';
-  const offsetX = side === 'left' ? -30 : 30;
+  // Subtle alternating entrance direction only — purely a visual
+  // detail, doesn't affect layout.
+  const offsetX = index % 2 === 0 ? -18 : 18;
 
   return (
-    <div className={`timeline-entry timeline-entry--${side}`}>
+    <div className="timeline-entry">
       <span className="timeline-node" aria-hidden="true" />
       <motion.div
         className="timeline-card"
-        initial={reduceMotion ? false : { opacity: 0, x: offsetX, y: 16 }}
+        initial={reduceMotion ? false : { opacity: 0, x: offsetX, y: 20 }}
         whileInView={{ opacity: 1, x: 0, y: 0 }}
-        viewport={{ once: true, amount: 0.4 }}
+        viewport={{ once: true, amount: 0.35 }}
         transition={{ duration: 0.7, ease: 'easeOut' }}
       >
         <div className="timeline-image-wrap">
           <img src={entry.image} alt={entry.age} className="timeline-image" />
         </div>
-        <span className="timeline-age">{entry.age}</span>
-        <p className="timeline-caption">{entry.caption}</p>
+        <div className="timeline-text">
+          <span className="timeline-age">{entry.age}</span>
+          <p className="timeline-caption">{entry.caption}</p>
+        </div>
       </motion.div>
     </div>
   );
