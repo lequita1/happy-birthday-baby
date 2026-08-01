@@ -4,7 +4,6 @@ import '../css/Page1.css';
 
 const TAP_HINT_TEXT = 'tap to open';
 
-// Deterministic RNG so the starfield is stable across re-renders
 function createRandom(seed) {
   let s = seed;
   return () => {
@@ -13,7 +12,6 @@ function createRandom(seed) {
   };
 }
 
-// ── Starfield ──────────────────────────────────────────────────
 function useStarField(count) {
   return useMemo(() => {
     const rng = createRandom(count + 42);
@@ -50,11 +48,6 @@ function Flares() {
   );
 }
 
-// ── Gift Box ───────────────────────────────────────────────────
-// Now with a real hinge-open animation: tap → lid rotates open →
-// glow spills from the mouth → brief hold → onOpen fires so
-// Page2 (flower burst) mounts with the box already in this same
-// open pose, at the same position — no visual cut.
 function GiftBox({ onOpen, reduceMotion }) {
   const [pressed, setPressed] = useState(false);
   const [opening, setOpening] = useState(false);
@@ -62,7 +55,6 @@ function GiftBox({ onOpen, reduceMotion }) {
   const handleOpen = () => {
     if (opening) return;
     setOpening(true);
-    // Let the lid finish its swing before handing off to Page2.
     setTimeout(() => onOpen(), reduceMotion ? 150 : 560);
   };
 
@@ -102,12 +94,10 @@ function GiftBox({ onOpen, reduceMotion }) {
             : { duration: 3.2, repeat: Infinity, ease: 'easeInOut' }
         }
       >
-        {/* Box body — deep crimson */}
         <rect x="32" y="76" width="136" height="82" rx="10" fill="#6B0F1A" />
         <rect x="32" y="76" width="136" height="82" rx="10" fill="url(#boxShade)" />
         <rect x="90" y="76" width="20" height="82" fill="#1E3FD8" />
-
-        {/* Glow spilling from the mouth — only visible once opening */}
+        
         <motion.ellipse
           cx="100"
           cy="80"
@@ -119,7 +109,7 @@ function GiftBox({ onOpen, reduceMotion }) {
           transition={{ duration: 0.35, delay: opening ? 0.15 : 0 }}
         />
 
-        {/* Lid group — hinges open from the back edge */}
+
         <motion.g
           style={{ transformOrigin: '100px 80px' }}
           animate={{ rotate: opening ? -28 : 0, y: opening ? -6 : 0 }}
@@ -168,7 +158,6 @@ function GiftBox({ onOpen, reduceMotion }) {
   );
 }
 
-// ── Scene root ─────────────────────────────────────────────────
 export default function GalacticReveal({ onOpen }) {
   const reduceMotion = useReducedMotion();
   const stars = useStarField(80);
