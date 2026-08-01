@@ -1,0 +1,57 @@
+/* ═══════════════════════════════════════════════════
+   Page2 — Flower Burst (Buzz palette)
+   ═══════════════════════════════════════════════════ */
+
+.burst-scene {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Same bg as Page1 — no visible cut on transition */
+  background:
+    radial-gradient(
+      ellipse 80% 60% at 50% 35%,
+      #3D0812 0%,
+      #1A0508 50%,
+      #080202 100%
+    );
+}
+
+/* All petals originate from this centre point */
+.burst-origin {
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+.petal-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: center center;
+  /* Offset so the SVG centre sits on the origin point */
+  margin-top: -20px;
+  margin-left: -20px;
+  pointer-events: none;
+}
+
+/* White radial flash at the moment of tap */
+.burst-flash {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.4) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 10;
+}

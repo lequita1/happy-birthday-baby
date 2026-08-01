@@ -1,0 +1,292 @@
+/* ═══════════════════════════════════════════════════
+   Page1 — Galactic Reveal (Buzz palette)
+   Crimson base · cobalt cuts · white flare slashes
+   ═══════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&display=swap');
+
+.galactic-scene {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Deep crimson-to-near-black radial — the Buzz world */
+  background:
+    radial-gradient(
+      ellipse 80% 60% at 50% 35%,
+      #3D0812 0%,
+      #1A0508 50%,
+      #080202 100%
+    );
+}
+
+/* White overlay that fades out to reveal the scene */
+.fade-veil {
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* ── Starfield ─────────────────────────────────── */
+
+.starfield {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+  animation-name: twinkle;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+/* White pinprick stars — the majority */
+.star--white {
+  background: #ffffff;
+  box-shadow: 0 0 3px 0px rgba(255, 255, 255, 0.6);
+}
+
+/* Electric blue mid-size stars */
+.star--blue {
+  background: #4D6FFF;
+  box-shadow: 0 0 5px 1px rgba(77, 111, 255, 0.7);
+}
+
+/* Rare large crimson glints */
+.star--crimson {
+  background: #FF3A3A;
+  box-shadow: 0 0 6px 2px rgba(255, 58, 58, 0.5);
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.1; }
+  50%       { opacity: 1; }
+}
+
+/* Shooting star: now cobalt-white */
+.shooting-star {
+  position: absolute;
+  top: 8%;
+  left: -5%;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow:
+    0 0 8px 2px #ffffff,
+    0 0 20px 6px rgba(77, 111, 255, 0.6);
+  animation: shoot 13s linear infinite;
+  animation-delay: 2s;
+  opacity: 0;
+}
+
+@keyframes shoot {
+  0%   { transform: translate(0, 0) rotate(-15deg);        opacity: 0; }
+  2%   { opacity: 1; }
+  12%  { transform: translate(70vw, 28vh) rotate(-15deg);  opacity: 0; }
+  100% { transform: translate(70vw, 28vh) rotate(-15deg);  opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star { animation: none; opacity: 0.5; }
+}
+
+/* ── Lens-flare slashes (signature element) ─────── */
+/* Echo the diagonal white + blue light streaks
+   from the Buzz album art. Purely decorative,
+   perfectly still — atmosphere, not distraction.   */
+
+.flare-field {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.flare {
+  position: absolute;
+  border-radius: 999px;
+  transform-origin: center;
+}
+
+/* Main white slash — lower left to upper right */
+.flare-1 {
+  width: 55vw;
+  height: 1.5px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.55) 40%,
+    rgba(255, 255, 255, 0.9) 55%,
+    rgba(255, 255, 255, 0.3) 70%,
+    transparent 100%
+  );
+  top: 62%;
+  left: -8%;
+  transform: rotate(-34deg);
+}
+
+/* Cobalt slash — parallel, offset */
+.flare-2 {
+  width: 40vw;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(77, 111, 255, 0.4) 35%,
+    rgba(120, 150, 255, 0.85) 60%,
+    transparent 100%
+  );
+  top: 56%;
+  left: 5%;
+  transform: rotate(-34deg);
+}
+
+/* Short bright white accent near center */
+.flare-3 {
+  width: 18vw;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.8) 50%,
+    transparent 100%
+  );
+  top: 58%;
+  left: 28%;
+  transform: rotate(-34deg);
+  filter: blur(0.5px);
+}
+
+/* Thin cobalt upper-right ghost */
+.flare-4 {
+  width: 25vw;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(77, 111, 255, 0.25) 50%,
+    transparent 100%
+  );
+  top: 22%;
+  right: 5%;
+  transform: rotate(-28deg);
+}
+
+/* ── Gift box ───────────────────────────────────── */
+
+.gift-stage {
+  position: relative;
+  z-index: 3;
+}
+
+.gift-box-button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 3rem;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Cobalt glow replacing the old gold */
+.gift-glow {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: 240px;
+  height: 240px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    rgba(30, 63, 216, 0.35) 0%,
+    rgba(30, 63, 216, 0.08) 50%,
+    transparent 70%
+  );
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+.gift-box-svg {
+  position: relative;
+  width: clamp(140px, 32vw, 210px);
+  filter:
+    drop-shadow(0 6px 18px rgba(0, 0, 0, 0.5))
+    drop-shadow(0 0 24px rgba(30, 63, 216, 0.25));
+}
+
+/* Orbiting sparks — now white + cobalt */
+.gift-orbit {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: 270px;
+  height: 270px;
+  transform: translate(-50%, -50%);
+  animation: orbit-spin 10s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes orbit-spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.orbit-spark {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.orbit-spark-1 {
+  width: 5px;
+  height: 5px;
+  background: #ffffff;
+  box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.8);
+  top: 2%;
+  left: 50%;
+}
+
+.orbit-spark-2 {
+  width: 4px;
+  height: 4px;
+  background: #4D6FFF;
+  box-shadow: 0 0 6px 2px rgba(77, 111, 255, 0.8);
+  top: 72%;
+  left: 10%;
+}
+
+.orbit-spark-3 {
+  width: 3px;
+  height: 3px;
+  background: #ffffff;
+  box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.6);
+  top: 80%;
+  left: 84%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gift-orbit { animation: none; }
+}
+
+/* Tap hint — white italic Fraunces */
+.tap-hint {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  letter-spacing: 0.07em;
+  color: #ffffff;
+  opacity: 0.75;
+}
