@@ -88,6 +88,13 @@
   opacity: 0;
 }
 
+/* Second meteor on a different track for variety */
+.shooting-star--late {
+  top: 26%;
+  left: -8%;
+  animation-delay: 8.5s;
+}
+
 @keyframes shoot {
   0%   { transform: translate(0, 0) rotate(-15deg);        opacity: 0; }
   2%   { opacity: 1; }
@@ -95,11 +102,8 @@
   100% { transform: translate(70vw, 28vh) rotate(-15deg);  opacity: 0; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .star { animation: none; opacity: 0.5; }
-}
-
 /* ── Lens-flare slashes (signature element) ─────── */
+
 /* Echo the diagonal white + blue light streaks
    from the Buzz album art. Purely decorative,
    perfectly still — atmosphere, not distraction.   */
@@ -187,6 +191,7 @@
 .gift-stage {
   position: relative;
   z-index: 3;
+  animation: float-bob 5s ease-in-out infinite;
 }
 
 .gift-box-button {
@@ -218,6 +223,7 @@
   );
   filter: blur(8px);
   pointer-events: none;
+  animation: glow-breathe 4s ease-in-out infinite;
 }
 
 .gift-box-svg {
@@ -275,10 +281,6 @@
   box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.6);
   top: 80%;
   left: 84%;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .gift-orbit { animation: none; }
 }
 
 /* Tap hint — white italic Fraunces */

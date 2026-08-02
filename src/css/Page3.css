@@ -90,8 +90,8 @@
    sitting underneath. That mismatch was the old bug.
 
    Ring rotation is done with a CSS conic-gradient + keyframe,
-   not JS/Framer — cheaper, and prefers-reduced-motion below
-   turns it off automatically without any JS branching.        */
+   not JS/Framer — cheaper, and it runs everywhere (motion is
+   intentionally not gated, matching the rest of the site).    */
 
 .play-prompt {
   position: relative;
@@ -138,6 +138,7 @@
   );
   filter: blur(20px);
   pointer-events: none;
+  animation: glow-breathe 4.5s ease-in-out infinite;
 }
 
 /* Rotating gradient ring — conic-gradient masked to a thin band */
@@ -210,11 +211,8 @@
   text-shadow: 0 0 24px rgba(255, 255, 255, 0.15);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .play-ring { animation: none; }
-}
-
 /* ── Scrollable text region ─────────────────────────
+
    Message body scrolls independently if it's taller than the
    viewport, and reserves space at the bottom so the last line
    never sits underneath the fixed continue button.            */

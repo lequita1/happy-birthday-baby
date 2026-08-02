@@ -192,7 +192,12 @@ export default function GalacticReveal({ onOpen }) {
             }}
           />
         ))}
-        {!reduceMotion && <span className="shooting-star" aria-hidden="true" />}
+        {!reduceMotion && (
+          <>
+            <span className="shooting-star" aria-hidden="true" />
+            <span className="shooting-star shooting-star--late" aria-hidden="true" />
+          </>
+        )}
       </div>
 
       <Flares />

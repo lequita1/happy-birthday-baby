@@ -49,6 +49,7 @@
     transparent 100%
   );
   transform: rotate(-30deg);
+  animation: flare-shimmer 6s ease-in-out infinite;
 }
 
 .ff-2 {
@@ -62,6 +63,7 @@
     transparent 100%
   );
   transform: rotate(-30deg);
+  animation: flare-shimmer 8.5s ease-in-out infinite;
 }
 
 .filmstrip-heading {

@@ -41,6 +41,7 @@
   filter: blur(30px);
   pointer-events: none;
   z-index: 0;
+  animation: glow-breathe 5s ease-in-out infinite;
 }
 
 .stack-flares {
@@ -68,6 +69,7 @@
     transparent 100%
   );
   transform: rotate(24deg);
+  animation: flare-shimmer 6.5s ease-in-out infinite;
 }
 
 .sf-2 {
@@ -81,6 +83,7 @@
     transparent 100%
   );
   transform: rotate(24deg);
+  animation: flare-shimmer 9s ease-in-out infinite;
 }
 
 .stack-heading {

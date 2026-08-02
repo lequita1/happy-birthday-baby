@@ -79,8 +79,8 @@ function ContinueButton({ onNext }) {
 // grouped in their own fixed-size stack (.play-icon-stack) so
 // they stay perfectly co-centered regardless of the hint text
 // below — that mismatch was the root of the old "ugly/off"
-// look. Ring rotation is pure CSS now (cheaper + auto-respects
-// prefers-reduced-motion via the stylesheet's own media query).
+// look. Ring rotation is pure CSS now (cheaper + always on,
+// matching the site's intentionally ungated motion).
 function PlayPrompt({ onPlay }) {
   return (
     <motion.button

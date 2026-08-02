@@ -41,6 +41,7 @@
   filter: blur(30px);
   pointer-events: none;
   z-index: 0;
+  animation: glow-breathe 5.5s ease-in-out infinite;
 }
 
 .final-flares {
@@ -69,6 +70,7 @@
     transparent 100%
   );
   transform: rotate(-30deg);
+  animation: flare-shimmer 6.5s ease-in-out infinite;
 }
 
 .fnal-2 {
@@ -82,6 +84,7 @@
     transparent 100%
   );
   transform: rotate(-30deg);
+  animation: flare-shimmer 9s ease-in-out infinite;
 }
 
 .final-heading {

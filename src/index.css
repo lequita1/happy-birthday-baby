@@ -43,3 +43,28 @@ body {
 button {
   touch-action: manipulation;
 }
+
+/* ─────────────────────────────────────────────────────
+   Shared ambient animation keyframes — slow, subtle, and
+   transform/opacity only, so they stay cheap on phones.
+   Each scene layers a few of these rather than one loud
+   effect. Defined here once; every scene CSS uses them.
+   ───────────────────────────────────────────────────── */
+
+/* Lens-flare lines gently brighten and dim */
+@keyframes flare-shimmer {
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 1; }
+}
+
+/* Background glows breathe in and out like light */
+@keyframes glow-breathe {
+  0%, 100% { opacity: 0.78; }
+  50%      { opacity: 1; }
+}
+
+/* Slow, gentle rise-and-settle float (e.g. gift box) */
+@keyframes float-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}

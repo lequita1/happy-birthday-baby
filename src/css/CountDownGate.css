@@ -64,10 +64,5 @@
   font-size: 1.5rem;
   letter-spacing: 0.04em;
   color: #ce551d;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .digit {
-    transition: none;
-  }
+  animation: glow-breathe 3.4s ease-in-out infinite;
 }
