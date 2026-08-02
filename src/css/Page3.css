@@ -1,7 +1,3 @@
-/* ═══════════════════════════════════════════════════
-   Page3 — Typewriter Message (Buzz palette)
-   ═══════════════════════════════════════════════════ */
-
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,300&family=Inter:wght@400&display=swap');
 
 .message-scene {
@@ -18,8 +14,6 @@
       #080202 100%
     );
 }
-
-/* ── Atmosphere ──────────────────────────────────── */
 
 .msg-glow {
   position: absolute;
@@ -81,12 +75,6 @@
   transform: rotate(-34deg);
 }
 
-/* ── Scrollable text region ─────────────────────────
-   This is the actual fix: the message body now scrolls
-   independently if it's taller than the viewport, and it
-   reserves space at the bottom so the last line never sits
-   underneath the fixed continue button.                  */
-
 .message-scroll-area {
   position: relative;
   z-index: 1;
@@ -95,8 +83,6 @@
   overflow-y: auto;
   display: flex;
   align-items: center;
-  /* "safe" keeps content reachable by scroll even when it overflows —
-     plain `center` can otherwise make the top of long text unreachable */
   justify-content: safe center;
   padding: clamp(2rem, 8vw, 5rem) clamp(1.5rem, 6vw, 3.5rem);
   padding-bottom: clamp(6.5rem, 16vw, 8.5rem);
@@ -121,7 +107,6 @@
   text-shadow: 0 0 40px rgba(255, 255, 255, 0.08);
 }
 
-/* ── Blinking cursor ─────────────────────────────── */
 
 .typewriter-cursor {
   display: inline-block;
@@ -132,8 +117,6 @@
   vertical-align: baseline;
 }
 
-/* ── Continue button — pinned to the viewport, always
-   reachable regardless of message length ─────────── */
 
 .continue-wrap {
   position: fixed;
@@ -143,7 +126,7 @@
   z-index: 2;
   display: flex;
   justify-content: center;
-  pointer-events: none; /* wrapper itself shouldn't block clicks when button is absent */
+  pointer-events: none;
 }
 
 .continue-wrap > * {

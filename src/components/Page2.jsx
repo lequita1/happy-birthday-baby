@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion} from 'framer-motion';
+import { useReducedMotion } from '../useMotionPreference';
 import { flowerImages } from '../flowerImages';
 import '../css/Page2.css';
 

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { motion, AnimatePresence} from 'framer-motion';
 import { TARGET_DATE } from '../config';
+import { useReducedMotion } from '../useMotionPreferenceuse';
 import '../css/CountDownGate.css';
 
 const LABEL_TEXT = 'until then';
