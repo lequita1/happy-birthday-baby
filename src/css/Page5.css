@@ -11,7 +11,8 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding: clamp(3rem, 8vw, 5rem) 1.5rem clamp(3rem, 8vw, 4.5rem);
+  justify-content: center;
+  padding: clamp(3rem, 8vw, 5rem) 1.5rem clamp(5rem, 13vw, 7rem);
   overflow: hidden;
   background:
     radial-gradient(
@@ -437,16 +438,22 @@
 }
 
 /* ── Continue button ─────────────────────────────── */
-/* Moved into normal document flow instead of pinning to the
-   viewport bottom — on tall/desktop screens the fixed version
-   ended up looking stranded, far from the gallery it belongs to. */
+/* Pinned to the viewport bottom so the gallery group stays
+   vertically centered and the button is always reachable. */
 
 .stack-continue-wrap {
-  position: relative;
-  z-index: 1;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(clamp(1.5rem, 5vw, 2.5rem) + env(safe-area-inset-bottom, 0px));
+  z-index: 2;
   display: flex;
   justify-content: center;
-  margin-top: clamp(2rem, 6vw, 3rem);
+  pointer-events: none;
+}
+
+.stack-continue-wrap > * {
+  pointer-events: auto;
 }
 
 .stack-continue-btn {

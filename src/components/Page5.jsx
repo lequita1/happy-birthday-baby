@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useReducedMotion } from '../useMotionPreference';
 import { galleryData } from '../galleryData';
@@ -31,42 +31,39 @@ const cardVariants = {
   }),
 };
 
-function useGalleryReady(firstSrc) {
+// Preloads + decodes every gallery image up front. `ready` flips as
+// soon as the first one is decoded so the scene appears quickly; the
+// rest finish in the background. Because everything is already decoded
+// before the viewer ever swipes, frame changes never stall on decode.
+function useGalleryPreload(sources) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (!firstSrc) return;
-
     let cancelled = false;
-    const img = new Image();
-    const done = () => {
-      if (!cancelled) setReady(true);
+    let firstDone = false;
+
+    const markReady = () => {
+      if (!cancelled && !firstDone) {
+        firstDone = true;
+        setReady(true);
+      }
     };
 
-    img.onload = done;
-    img.onerror = done;
-    img.src = firstSrc;
+    sources.forEach((src, i) => {
+      const img = new Image();
+      img.onload = () => {
+        img.decode().then(markReady).catch(markReady);
+      };
+      img.onerror = i === 0 ? markReady : () => {};
+      img.src = src;
+    });
 
     return () => {
       cancelled = true;
     };
-  }, [firstSrc]);
+  }, [sources]);
 
-  return ready || !firstSrc;
-}
-
-function useAdjacentPreload(sources, index) {
-  useEffect(() => {
-    const count = sources.length;
-    if (count === 0) return;
-
-    [0, 1, 2].forEach((offset) => {
-      const src = sources[(index + offset) % count];
-      if (!src) return;
-      const img = new Image();
-      img.src = src;
-    });
-  }, [sources, index]);
+  return ready || sources.length === 0;
 }
 
 function Lightbox({ entry, onClose }) {
@@ -181,9 +178,8 @@ export default function Gallery({ onNext }) {
   const [exitDir, setExitDir] = useState(0);
   const [lightboxEntry, setLightboxEntry] = useState(null);
 
-  const imageSources = galleryData.map((g) => g.image);
-  const ready = useGalleryReady(imageSources[0]);
-  useAdjacentPreload(imageSources, index);
+  const imageSources = useMemo(() => galleryData.map((g) => g.image), []);
+  const ready = useGalleryPreload(imageSources);
 
   const count = galleryData.length;
   const current = galleryData[index];
@@ -260,7 +256,7 @@ export default function Gallery({ onNext }) {
 
             {[peekIndices[1], peekIndices[0]].map((dataIdx, pos) => (
               <div
-                key={`peek-${dataIdx}-${pos}`}
+                key={`peek-${pos}`}
                 className="stack-card stack-card--peek"
                 style={{
                   transform: `translateY(${10 - pos * 6}px) scale(${0.9 + pos * 0.05}) rotate(${
@@ -273,7 +269,6 @@ export default function Gallery({ onNext }) {
                   src={galleryData[dataIdx].image}
                   alt=""
                   className="stack-image"
-                  loading="lazy"
                   decoding="async"
                 />
               </div>
@@ -295,7 +290,7 @@ export default function Gallery({ onNext }) {
                 dragMomentum={false}
                 onDragEnd={handleDragEnd}
                 whileTap={{ cursor: 'grabbing' }}
-                style={{ zIndex: 3 }}
+                style={{ zIndex: 3, willChange: 'transform' }}
               >
                 <img
                   src={current.image}
