@@ -6,7 +6,8 @@
 
 .stack-scene {
   position: relative;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100svh;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -127,20 +128,22 @@
 .stack-wrap {
   position: relative;
   z-index: 1;
-  width: clamp(240px, 78vw, 340px);
+  flex: 0 1 auto;
+  width: min(78vw, 340px);
+  width: min(78vw, 340px, calc(50dvh * 4 / 5));
   aspect-ratio: 4 / 5;
   margin: 0 auto;
 }
 
 @media (min-width: 600px) {
   .stack-wrap {
-    width: clamp(280px, 52vw, 380px);
+    width: min(52vw, 380px, calc(50dvh * 4 / 5));
   }
 }
 
 @media (min-width: 900px) {
   .stack-wrap {
-    width: clamp(320px, 34vw, 460px);
+    width: min(34vw, 460px, calc(50dvh * 4 / 5));
   }
 }
 

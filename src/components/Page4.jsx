@@ -307,7 +307,6 @@ export default function Timeline({ onNext }) {
     };
     el.addEventListener('keydown', onKeyDown);
     return () => el.removeEventListener('keydown', onKeyDown);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeIndex]);
 
   const activeEntry = timelineData[activeIndex];

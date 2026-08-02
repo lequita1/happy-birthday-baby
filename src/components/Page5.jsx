@@ -35,10 +35,7 @@ function useGalleryReady(firstSrc) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (!firstSrc) {
-      setReady(true);
-      return;
-    }
+    if (!firstSrc) return;
 
     let cancelled = false;
     const img = new Image();
@@ -55,7 +52,7 @@ function useGalleryReady(firstSrc) {
     };
   }, [firstSrc]);
 
-  return ready;
+  return ready || !firstSrc;
 }
 
 function useAdjacentPreload(sources, index) {
