@@ -8,6 +8,9 @@ import FlowerBurst from './components/Page2';
 import MessageScene from './components/Page3';
 import Timeline from './components/Page4';
 import Gallery from './components/Page5';
+import VideoScene from './components/Page6';
+import WishesScene from './components/Page7';
+import FinalScene from './components/Page8';
 
 // ─────────────────────────────────────────────────────────────
 // Scene flow (linear, no routing):
@@ -74,7 +77,26 @@ export default function App() {
         />
       )}
 
-      {/* Uncomment as you build further pages */}
+      {scene === 'video' && (
+        <VideoScene
+          key="video"
+          onNext={() => go('wishes')}
+        />
+      )}
+
+      {scene === 'wishes' && (
+        <WishesScene
+          key="wishes"
+          onNext={() => go('final')}
+        />
+      )}
+
+      {scene === 'final' && (
+        <FinalScene
+          key="final"
+          onReplay={() => go('gift')}
+        />
+      )}
     </AnimatePresence>
   );
 }
