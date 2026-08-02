@@ -5,14 +5,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,300&family=Inter:wght@400;500&display=swap');
 
 .stack-scene {
-  position: relative;
-  height: 100vh;
-  height: 100svh;
-  width: 100%;
+  position: fixed;
+  inset: 0;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
-  padding: clamp(3rem, 8vw, 5rem) 1.5rem clamp(5rem, 13vw, 7rem);
+  gap: clamp(0.6rem, 2.5vw, 1.1rem);
+  padding:
+    clamp(2rem, 6vw, 4rem)
+    1.5rem
+    calc(clamp(4.5rem, 12vw, 6.5rem) + env(safe-area-inset-bottom, 0px));
   overflow: hidden;
   background:
     radial-gradient(
@@ -95,7 +98,7 @@
   font-size: clamp(1.4rem, 4vw, 2.1rem);
   color: #ffffff;
   text-align: center;
-  margin: 0 0 0.4rem;
+  margin: 0;
   text-shadow: 0 0 40px rgba(255, 255, 255, 0.08);
 }
 
@@ -110,7 +113,7 @@
   text-transform: uppercase;
   color: #4D6FFF;
   opacity: 0.75;
-  margin-bottom: clamp(2rem, 6vw, 3rem);
+  margin: 0;
 }
 
 .stack-loading {
@@ -127,27 +130,33 @@
 
 /* ── Stack ────────────────────────────────────────── */
 /* Bigger on wide screens — was capped at 300px regardless of
-   viewport size, which read as small on desktop. */
+   viewport size, which read as small on desktop. `max-width`
+   (svh-based) caps the card so it never exceeds the phone
+   viewport and the group stays truly vertically centered;
+   the `width` line is a safe fallback if svh is unsupported. */
 
 .stack-wrap {
   position: relative;
   z-index: 1;
   flex: 0 1 auto;
-  width: min(78vw, 340px);
-  width: min(78vw, 340px, calc(50dvh * 4 / 5));
+  min-height: 0;
+  width: min(78vw, 320px);
+  max-width: calc(48svh * 4 / 5);
   aspect-ratio: 4 / 5;
   margin: 0 auto;
 }
 
 @media (min-width: 600px) {
   .stack-wrap {
-    width: min(52vw, 380px, calc(50dvh * 4 / 5));
+    width: min(52vw, 360px);
+    max-width: calc(48svh * 4 / 5);
   }
 }
 
 @media (min-width: 900px) {
   .stack-wrap {
-    width: min(34vw, 460px, calc(50dvh * 4 / 5));
+    width: min(30vw, 420px);
+    max-width: calc(52svh * 4 / 5);
   }
 }
 
@@ -185,7 +194,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
-  margin: clamp(1.25rem, 4vw, 1.75rem) auto 0;
+  margin: 0;
   padding: 0.55rem 1.4rem;
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 0.68rem;
@@ -294,7 +303,7 @@
   display: flex;
   justify-content: center;
   gap: 0.45rem;
-  margin-top: clamp(1.5rem, 5vw, 2rem);
+  margin: 0;
 }
 
 .stack-dot {
@@ -319,7 +328,7 @@
   align-items: center;
   gap: 0.75rem;
   max-width: min(360px, 70vw);
-  margin: clamp(1.5rem, 5vw, 2rem) auto 0;
+  margin: 0 auto;
 }
 
 .stack-progress-track {

@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Nebula, Aurora } from './Ambient';
 import '../css/Page6.css';
 
 // ─────────────────────────────────────────────────────────────
@@ -56,6 +57,9 @@ export default function VideoScene({ onNext }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.9, ease: 'easeInOut' }}
     >
+      <Nebula />
+      <Aurora />
+
       <div className="video-glow" aria-hidden="true" />
       <div className="video-flares" aria-hidden="true">
         <span className="vf vf-1" />

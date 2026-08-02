@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useReducedMotion } from '../useMotionPreference';
 import { wishesData } from '../wishesData';
+import { Nebula, Aurora } from './Ambient';
 import '../css/Page7.css';
 
 // ─────────────────────────────────────────────────────────────
@@ -46,6 +47,9 @@ export default function WishesScene({ onNext }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.9, ease: 'easeInOut' }}
     >
+      <Nebula />
+      <Aurora />
+
       <div className="wishes-glow" aria-hidden="true" />
       <div className="wishes-flares" aria-hidden="true">
         <span className="wf wf-1" />

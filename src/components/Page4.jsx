@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useReducedMotion } from '../useMotionPreference';
 import { timelineData } from '../timelineData';
+import { Nebula, Aurora } from './Ambient';
 import '../css/Page4.css';
 
 // ─────────────────────────────────────────────────────────────
@@ -319,6 +320,9 @@ export default function Timeline({ onNext }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.9, ease: 'easeInOut' }}
     >
+      <Nebula />
+      <Aurora />
+
       <div className="filmstrip-flares" aria-hidden="true">
         <span className="ff ff-1" />
         <span className="ff ff-2" />

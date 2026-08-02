@@ -20,6 +20,17 @@
   text-rendering: optimizeLegibility;
 }
 
+/* Border-box everywhere: scenes set height: 100svh AND padding,
+   and only with border-box does that actually equal the visible
+   viewport. Without this, content-box made every scene 100svh +
+   padding tall — the classic "centered but pushed down / cut off"
+   bug on phones. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html,
 body {
   height: 100%;
@@ -34,9 +45,9 @@ body {
 #root {
   height: 100vh;
   height: 100svh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
 }
 
 /* Kill double-tap / tap-to-zoom on interactive elements */
@@ -67,4 +78,90 @@ button {
 @keyframes float-bob {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-7px); }
+}
+
+/* ── Shared ambient layers: living nebula + aurora ribbons ──
+   Rendered as first children of each scene (z-index 0) so they
+   sit behind the content. Drift is transform-only; blur is static
+   so the compositor handles everything cheaply.                */
+
+/* Large soft gradient blobs drifting very slowly */
+.ambient-nebula {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  filter: blur(50px);
+}
+
+.ambient-blob {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+  animation: nebula-drift var(--dur, 38s) ease-in-out infinite;
+}
+
+@keyframes nebula-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(var(--dx, 6vmax), var(--dy, -4vh), 0) scale(1.12); }
+}
+
+/* Wide soft gradient ribbons slowly swaying across the scene */
+.ambient-aurora {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  filter: blur(46px);
+}
+
+.aurora-band {
+  position: absolute;
+  left: -15%;
+  height: 42vh;
+  min-height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(var(--band-color), var(--band-opacity)) 0%,
+    rgba(var(--band-color), 0) 70%
+  );
+  transform: rotate(var(--band-rotate));
+  animation: aurora-sway var(--band-dur) ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes aurora-sway {
+  0%, 100% { transform: translateX(0) rotate(var(--band-rotate)); }
+  50%      { transform: translateX(var(--band-sway)) rotate(calc(var(--band-rotate) + 4deg)); }
+}
+
+/* Occasional wide light sweep gliding across the scene */
+.light-sweep {
+  position: absolute;
+  top: -25%;
+  left: 0;
+  width: 30vw;
+  height: 150%;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.04) 40%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.04) 60%,
+    transparent 100%
+  );
+  transform: rotate(14deg) translateX(-200%);
+  animation: light-sweep 16s ease-in-out infinite;
+}
+
+@keyframes light-sweep {
+  0%   { transform: rotate(14deg) translateX(-200%); opacity: 0; }
+  7%   { opacity: 1; }
+  18%  { transform: rotate(14deg) translateX(500%); opacity: 0; }
+  100% { transform: rotate(14deg) translateX(500%); opacity: 0; }
 }

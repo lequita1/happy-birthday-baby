@@ -11,6 +11,7 @@ import Gallery from './components/Page5';
 import VideoScene from './components/Page6';
 import WishesScene from './components/Page7';
 import FinalScene from './components/Page8';
+import MusicPlayer from './components/MusicPlayer';
 
 // ─────────────────────────────────────────────────────────────
 // Scene flow (linear, no routing):
@@ -32,7 +33,8 @@ export default function App() {
   const loadedImages = useImagePreloader(flowerImages);
 
   return (
-    <AnimatePresence mode="wait">
+    <>
+      <AnimatePresence mode="wait">
 
       {scene === 'countdown' && (
         <CountdownGate
@@ -97,6 +99,11 @@ export default function App() {
           onReplay={() => go('gift')}
         />
       )}
-    </AnimatePresence>
+      </AnimatePresence>
+
+      {/* Persistent across every scene — lives outside AnimatePresence
+          so the audio element and track position survive scene switches. */}
+      <MusicPlayer />
+    </>
   );
 }

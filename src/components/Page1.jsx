@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { motion} from 'framer-motion';
 import { useReducedMotion } from "../useMotionPreference";
+import { Nebula, Aurora } from './Ambient';
 import '../css/Page1.css';
 
 const TAP_HINT_TEXT = 'tap to open';
@@ -176,6 +177,9 @@ export default function GalacticReveal({ onOpen }) {
         animate={{ opacity: 0 }}
         transition={{ duration: 1.5, ease: 'easeInOut' }}
       />
+
+      <Nebula />
+      <Aurora />
 
       <div className="starfield" aria-hidden="true">
         {stars.map((s) => (

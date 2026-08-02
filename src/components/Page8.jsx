@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useReducedMotion } from '../useMotionPreference';
+import { Nebula, Aurora } from './Ambient';
 import '../css/Page8.css';
 
 // ─────────────────────────────────────────────────────────────
@@ -25,6 +26,10 @@ export default function FinalScene({ onReplay }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.9, ease: 'easeInOut' }}
     >
+      <Nebula />
+      <Aurora />
+      <span className="light-sweep" aria-hidden="true" />
+
       <div className="final-glow" aria-hidden="true" />
       <div className="final-flares" aria-hidden="true">
         <span className="fnal fnal-1" />

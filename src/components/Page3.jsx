@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useReducedMotion } from '../useMotionPreference';
+import { Nebula, Aurora } from './Ambient';
 import '../css/Page3.css';
 
 // ─────────────────────────────────────────────────────────────
@@ -178,6 +179,9 @@ export default function MessageScene({ onNext }) {
         preload="auto"
         style={{ display: 'none' }}
       />
+
+      <Nebula />
+      <Aurora />
 
       <div className="msg-glow" aria-hidden="true" />
       <div className="msg-flares" aria-hidden="true">
