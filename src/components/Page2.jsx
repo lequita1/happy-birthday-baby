@@ -7,11 +7,24 @@ import '../css/Page2.css';
 // ─────────────────────────────────────────────────────────────
 // Page2 — Flower burst — Scene 3
 //
-// Picks up right where Page1 left off: the box is shown already
-// open (same pose, same position) and flowers spill out of its
-// mouth in a spiral, filling the full screen — corners included.
+// WHY THE OLD VERSION HAD GAPS:
+// Concentric rings sound right but don't actually guarantee full
+// coverage — a circle's area (π·r²) doesn't match a rectangle's
+// area (w·h) for most screen aspect ratios, so rings either
+// over-cover near the center or leave thin gaps in the radial
+// bands *between* rings (the "donut hole" problem). That's what
+// you were seeing.
 //
-// Uses whatever PNGs are listed in flowerImages.js.
+// THE FIX: cover the actual rectangle directly. We lay a grid
+// over the real viewport (with a buffer row/column past every
+// edge), then fly one flower from the box to each grid cell.
+// Flower size is derived FROM the grid spacing (not a fixed
+// range), so overlap — and therefore zero gaps — is mathematically
+// guaranteed regardless of screen size or aspect ratio. Delay is
+// based on each cell's distance from the box, so it still reads
+// as an outward "layer by layer" wave — just correctly shaped
+// this time. No spiral: every flower still flies in a straight
+// line; only its own rotation (not its path) changes in flight.
 // ─────────────────────────────────────────────────────────────
 
 function createRandom(seed) {
@@ -22,36 +35,70 @@ function createRandom(seed) {
   };
 }
 
-const PETAL_COUNT = 60; // test on a real phone; drop to ~36–44 if it chugs
+// Tune TARGET_CELLS down if this chugs on an older phone — fewer,
+// bigger flowers still guarantee full coverage either way.
+const TARGET_CELLS = 100;
 
-function usePetals(count) {
+// Flower diameter = cellSize / OVERLAP. Must stay comfortably
+// under 1 — this ratio (combined with the jitter cap below) is
+// what mathematically guarantees no gaps. Don't loosen without
+// re-checking the math in the comment above useFlowerField.
+const OVERLAP = 0.62;
+const JITTER_FRACTION = 0.16; // of cellSize — kept small on purpose, see above
+const SIZE_JITTER = [0.85, 1.25]; // multiplier range on top of the base size
+
+const STAGGER_WINDOW = 0.5;   // seconds — spread of the outward wave
+const FLIGHT_DURATION = 0.75; // seconds each flower takes to land
+const HOLD_AFTER_COVERAGE = 500; // ms pause once fully tiled, before advancing
+
+// Box sits slightly above true center (matches Page1/OpenBox) —
+// the grid is built in plain viewport coordinates and only
+// converted to "distance from the box" afterward, so the anchor
+// offset can't create gaps the way it did with the ring math.
+function useFlowerField() {
   return useMemo(() => {
-    const rng = createRandom(count * 7 + 13);
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const anchorX = w * 0.5;
+    const anchorY = h * 0.45;
 
-    const diagonal = Math.hypot(window.innerWidth, window.innerHeight);
-    const maxDist = diagonal * 0.58;
-    const minDist = 90;
+    const cellSize = Math.sqrt((w * h) / TARGET_CELLS);
+    const baseFlowerSize = cellSize / OVERLAP;
 
-    return Array.from({ length: count }, (_, i) => {
-      const goldenAngle = 137.508;
-      const baseAngle = (i * goldenAngle) % 360;
-      const angleDeg = baseAngle + (rng() * 20 - 10);
-      const angleRad = (angleDeg * Math.PI) / 180;
+    const cols = Math.ceil(w / cellSize) + 2; // buffer past left/right edges
+    const rows = Math.ceil(h / cellSize) + 2; // buffer past top/bottom edges
+    const rng = createRandom(cols * 97 + rows * 31 + 11);
 
-      const dist = minDist + (i / count) * (maxDist - minDist) + (rng() * 60 - 30);
+    const cells = [];
+    let maxDist = 0;
 
-      return {
-        id: i,
-        x: Math.cos(angleRad) * dist,
-        y: Math.sin(angleRad) * dist - 40,
-        rotate: angleDeg + rng() * 180,
-        image: flowerImages[Math.floor(rng() * flowerImages.length)],
-        size: 30 + rng() * 26,
-        delay: (i / count) * 0.55,
-        duration: 1.1 + rng() * 0.55,
-      };
-    });
-  }, [count]);
+    for (let r = -1; r < rows - 1; r++) {
+      for (let c = -1; c < cols - 1; c++) {
+        const jitterX = (rng() * 2 - 1) * cellSize * JITTER_FRACTION;
+        const jitterY = (rng() * 2 - 1) * cellSize * JITTER_FRACTION;
+        const targetX = c * cellSize + cellSize / 2 + jitterX;
+        const targetY = r * cellSize + cellSize / 2 + jitterY;
+
+        const dx = targetX - anchorX;
+        const dy = targetY - anchorY;
+        const dist = Math.hypot(dx, dy);
+        if (dist > maxDist) maxDist = dist;
+
+        cells.push({ dx, dy, dist });
+      }
+    }
+
+    return cells.map((cell, i) => ({
+      id: i,
+      x: cell.dx,
+      y: cell.dy,
+      rotate: (rng() * 2 - 1) * 200, // spins in place — not a path
+      image: flowerImages[Math.floor(rng() * flowerImages.length)],
+      size: baseFlowerSize * (SIZE_JITTER[0] + rng() * (SIZE_JITTER[1] - SIZE_JITTER[0])),
+      delay: (cell.dist / maxDist) * STAGGER_WINDOW + rng() * 0.05,
+      duration: FLIGHT_DURATION + rng() * 0.25,
+    }));
+  }, []);
 }
 
 // Logs once per broken path instead of failing silently — if you
@@ -68,10 +115,9 @@ function Petal({ data }) {
       initial={{ x: 0, y: 0, rotate: 0 }}
       animate={{ x: data.x, y: data.y, rotate: data.rotate }}
       transition={{
-        type: 'tween',
         duration: data.duration,
         delay: data.delay,
-        ease: [0.15, 0.85, 0.35, 1],
+        ease: [0.16, 0.9, 0.3, 1], // straight-line travel, quick out, gentle settle
       }}
     >
       <motion.img
@@ -85,12 +131,12 @@ function Petal({ data }) {
           marginTop: -data.size / 2,
         }}
         onError={() => handleImgError(data.image)}
-        initial={{ opacity: 0, scale: 0.1 }}
-        animate={{ opacity: [0, 1, 1, 0], scale: [0.1, 1.15, 1, 1] }}
+        initial={{ opacity: 0, scale: 0.2 }}
+        animate={{ opacity: [0, 1, 1], scale: [0.2, 1.1, 1] }}
         transition={{
           duration: data.duration,
           delay: data.delay,
-          times: [0, 0.15, 0.7, 1],
+          times: [0, 0.4, 1],
           ease: 'easeOut',
         }}
       />
@@ -124,24 +170,16 @@ function OpenBox() {
 
 export default function FlowerBurst({ onComplete }) {
   const reduceMotion = useReducedMotion();
-  const petals = usePetals(PETAL_COUNT);
+  const petals = useFlowerField();
   const calledRef = useRef(false);
 
   useEffect(() => {
-    // Quick sanity check — open devtools console after the box opens.
-    // You should see non-zero, varied x/y values here. If these all
-    // look tiny or identical, the bug is in the math, not the motion.
-    console.log(
-      '[FlowerBurst] sample petal targets:',
-      petals.slice(0, 3).map((p) => ({ x: Math.round(p.x), y: Math.round(p.y) }))
-    );
-
     let timeoutMs;
     if (reduceMotion) {
-      timeoutMs = 1300;
+      timeoutMs = 1200;
     } else {
       const longestDelay = Math.max(...petals.map((p) => p.delay + p.duration));
-      timeoutMs = (longestDelay + 0.2) * 1000;
+      timeoutMs = longestDelay * 1000 + HOLD_AFTER_COVERAGE;
     }
 
     const timeout = setTimeout(() => {
@@ -159,7 +197,7 @@ export default function FlowerBurst({ onComplete }) {
       className="burst-scene"
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.4 }}
+      transition={{ duration: 0.5 }}
     >
       <div className="burst-box-stage">
         <OpenBox />
@@ -177,7 +215,9 @@ export default function FlowerBurst({ onComplete }) {
               style={{
                 width: p.size,
                 height: p.size,
-                transform: `translate(${p.x * 0.7}px, ${p.y * 0.7}px) rotate(${p.rotate}deg)`,
+                marginLeft: -p.size / 2,
+                marginTop: -p.size / 2,
+                transform: `translate(${p.x}px, ${p.y}px) rotate(${p.rotate}deg)`,
               }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.95 }}

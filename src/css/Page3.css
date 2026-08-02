@@ -1,3 +1,7 @@
+/* ═══════════════════════════════════════════════════
+   Page3 — Typewriter Message (Buzz palette)
+   ═══════════════════════════════════════════════════ */
+
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,300&family=Inter:wght@400&display=swap');
 
 .message-scene {
@@ -14,6 +18,8 @@
       #080202 100%
     );
 }
+
+/* ── Atmosphere ──────────────────────────────────── */
 
 .msg-glow {
   position: absolute;
@@ -75,6 +81,144 @@
   transform: rotate(-34deg);
 }
 
+/* ── Play prompt — redesigned ─────────────────────────
+   Everything visual (halo, rotating ring, icon) lives inside
+   .play-icon-stack, a fixed 108×108 box that is itself centered
+   by the flex column below. Because the ring/halo are anchored
+   to *that box's* center (not the whole button's), they always
+   line up with the icon exactly — regardless of the hint text
+   sitting underneath. That mismatch was the old bug.
+
+   Ring rotation is done with a CSS conic-gradient + keyframe,
+   not JS/Framer — cheaper, and prefers-reduced-motion below
+   turns it off automatically without any JS branching.        */
+
+.play-prompt {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.75rem;
+  width: 100%;
+  height: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.play-icon-stack {
+  position: relative;
+  width: 108px;
+  height: 108px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Soft ambient halo — cobalt into crimson, ties back to the
+   gift box glow from Page1 */
+.play-halo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 260px;
+  height: 260px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(30, 63, 216, 0.30) 0%,
+    rgba(139, 26, 26, 0.14) 45%,
+    transparent 72%
+  );
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+/* Rotating gradient ring — conic-gradient masked to a thin band */
+.play-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 108px;
+  height: 108px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  background: conic-gradient(
+    from 0deg,
+    #4D6FFF 0%,
+    #E8EEFF 25%,
+    #FF3A3A 50%,
+    #4D6FFF 100%
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2.5px));
+          mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2.5px));
+  opacity: 0.85;
+  animation: play-ring-spin 7s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes play-ring-spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Glass icon — the visual tap target */
+.play-icon {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, rgba(139, 26, 26, 0.55), rgba(8, 2, 2, 0.72));
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(6px);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    0 8px 24px rgba(0, 0, 0, 0.45),
+    0 0 28px rgba(30, 63, 216, 0.3);
+  transition: box-shadow 0.25s ease;
+}
+
+.play-prompt:hover .play-icon {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    0 8px 28px rgba(0, 0, 0, 0.5),
+    0 0 36px rgba(30, 63, 216, 0.45);
+}
+
+/* Nudge the triangle for optical centering instead of padding */
+.play-icon svg {
+  transform: translateX(2px);
+}
+
+.play-hint {
+  position: relative;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  opacity: 0.8;
+  text-shadow: 0 0 24px rgba(255, 255, 255, 0.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .play-ring { animation: none; }
+}
+
+/* ── Scrollable text region ─────────────────────────
+   Message body scrolls independently if it's taller than the
+   viewport, and reserves space at the bottom so the last line
+   never sits underneath the fixed continue button.            */
+
 .message-scroll-area {
   position: relative;
   z-index: 1;
@@ -107,6 +251,7 @@
   text-shadow: 0 0 40px rgba(255, 255, 255, 0.08);
 }
 
+/* ── Blinking cursor ─────────────────────────────── */
 
 .typewriter-cursor {
   display: inline-block;
@@ -117,6 +262,8 @@
   vertical-align: baseline;
 }
 
+/* ── Continue button — pinned to the viewport, always
+   reachable regardless of message length ─────────── */
 
 .continue-wrap {
   position: fixed;
@@ -133,8 +280,6 @@
   pointer-events: auto;
 }
 
-/* Soft fade behind the button so text scrolling underneath
-   it doesn't look like it's cutting off abruptly */
 .continue-wrap::before {
   content: '';
   position: fixed;
