@@ -1,0 +1,140 @@
+/* ═══════════════════════════════════════════════════
+   Page8 — Final + replay (Buzz palette)
+   ═══════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,300&family=Inter:wght@400&display=swap');
+
+.final-scene {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 8vw, 4rem) 1.5rem;
+  overflow: hidden;
+  text-align: center;
+  background:
+    radial-gradient(
+      ellipse 80% 60% at 50% 35%,
+      #3D0812 0%,
+      #1A0508 55%,
+      #080202 100%
+    );
+}
+
+.final-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 560px;
+  height: 560px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    rgba(30, 63, 216, 0.16) 0%,
+    rgba(139, 26, 26, 0.1) 45%,
+    transparent 72%
+  );
+  filter: blur(30px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.final-flares {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.fnal {
+  position: absolute;
+  height: 1px;
+  border-radius: 999px;
+}
+
+.fnal-1 {
+  width: 46vw;
+  top: 16%;
+  right: -6%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.28) 45%,
+    rgba(77, 111, 255, 0.4) 65%,
+    transparent 100%
+  );
+  transform: rotate(-30deg);
+}
+
+.fnal-2 {
+  width: 28vw;
+  bottom: 22%;
+  left: -4%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(77, 111, 255, 0.3) 50%,
+    transparent 100%
+  );
+  transform: rotate(-30deg);
+}
+
+.final-heading {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(2rem, 7vw, 3.2rem);
+  line-height: 1.15;
+  color: #ffffff;
+  text-shadow: 0 0 60px rgba(255, 255, 255, 0.1);
+}
+
+.final-sub {
+  position: relative;
+  z-index: 1;
+  margin: clamp(1.25rem, 4vw, 2rem) 0 0;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1rem, 3vw, 1.3rem);
+  color: #4D6FFF;
+  opacity: 0.85;
+}
+
+.final-replay-btn {
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(2.5rem, 8vw, 4rem);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: lowercase;
+  color: #ffffff;
+  background: rgba(8, 2, 2, 0.55);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 58, 58, 0.55);
+  border-radius: 999px;
+  padding: 0.65rem 2.4rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.final-replay-btn:hover {
+  border-color: rgba(255, 58, 58, 0.9);
+  background: rgba(255, 58, 58, 0.1);
+}
+
+.final-replay-btn:focus-visible {
+  outline: 2px solid #FF3A3A;
+  outline-offset: 4px;
+}
