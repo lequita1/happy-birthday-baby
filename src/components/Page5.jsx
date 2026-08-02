@@ -2,7 +2,6 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { motion, AnimatePresence } from 'framer-motion';
 import { useReducedMotion } from '../useMotionPreference';
 import { galleryData } from '../galleryData';
-import { Nebula, Aurora } from './Ambient';
 import '../css/Page5.css';
 
 // ─────────────────────────────────────────────────────────────
@@ -223,9 +222,6 @@ export default function Gallery({ onNext }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.9, ease: 'easeInOut' }}
     >
-      <Nebula />
-      <Aurora />
-
       <span className="stack-glow" aria-hidden="true" />
       <div className="stack-flares" aria-hidden="true">
         <span className="sf sf-1" />
