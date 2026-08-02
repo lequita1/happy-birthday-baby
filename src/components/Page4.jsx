@@ -1,68 +1,54 @@
 import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useTime } from 'framer-motion';
 import { useReducedMotion } from '../useMotionPreference';
 import { timelineData } from '../timelineData';
 import '../css/Page4.css';
 
-// ─────────────────────────────────────────────────────────────
-// Page4 — Timeline (baby → present)
-//
-// CONCEPT: a scrapbook pinned to the Buzz world. Each memory is
-// a polaroid — cream border, small tape strip, a crimson ink
-// stamp for the age — tilted slightly like it was just dropped
-// onto the page. That's where "nostalgic" comes from.
-//
-// The spine ties it back to the rest of the site: it's not a
-// static line, it's a light trail that GROWS as you scroll, with
-// a small glowing head — the same visual language as the shooting
-// star from Page1's starfield. Built with useScroll/useTransform
-// so it's driven by actual scroll position, not a timer.
-//
-// Data-driven from timelineData.js — same shape as before, only
-// this file changed:
-//   { image, age, caption }
-// ─────────────────────────────────────────────────────────────
+const HEADING_TEXT = 'a reel of us';
+const SUBHEADING_TEXT = 'scroll to develop';
+const TILTS = [-1.2, 1.1, -1.6, 1.3, -0.9, 1.5, -1.4, 1.2];
 
-const HEADING_TEXT = 'every step got us here';
-const SUBHEADING_TEXT = 'a little scrapbook, just for you';
+function DustParticle({ index, lightY, reduceMotion }) {
+  const time = useTime();
+  const driftX = useTransform(
+    time,
+    (t) => Math.sin(t / 2000 + index) * 25 + (index % 3 - 1) * 15
+  );
+  const driftY = useTransform(
+    time,
+    (t) => Math.cos(t / 2500 + index * 2) * 15
+  );
+  const opacity = useTransform(
+    time,
+    (t) => 0.2 + 0.35 * Math.sin(t / 3000 + index * 1.7)
+  );
+  const top = useTransform([lightY, driftY], ([ly, dy]) => `calc(${ly} + ${dy}px)`);
+  const left = useTransform(driftX, (x) => `calc(50% + ${x}px)`);
 
-// Small deterministic tilt per card so photos read as "dropped
-// on the page" rather than a rigid grid. Alternating +/- keeps
-// it from feeling like they're all leaning the same way.
-const TILTS = [-4, 3, -3.5, 4.5, -2.5, 3.5, -4.5, 2.5];
+  if (reduceMotion) return null;
+  return <motion.div className="dust-mote" style={{ left, top, opacity }} aria-hidden="true" />;
+}
 
-function TimelineEntry({ entry, index, reduceMotion }) {
+function FilmFrame({ entry, index, reduceMotion }) {
   const tilt = TILTS[index % TILTS.length];
   const fromSide = index % 2 === 0 ? -1 : 1;
-  const zigzag = index % 2 === 1; // odd cards nudge slightly right
-
   return (
-    <div className={`tl-entry${zigzag ? ' tl-entry--b' : ''}`}>
-      <span className="tl-node" aria-hidden="true" />
-      <motion.div
-        className="tl-card"
-        initial={
-          reduceMotion
-            ? false
-            : { opacity: 0, y: 34, x: fromSide * 14, rotate: 0, scale: 0.88 }
-        }
-        whileInView={{ opacity: 1, y: 0, x: 0, rotate: tilt, scale: 1 }}
-        viewport={{ once: true, amount: 0.4 }}
-        transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <span className="tl-tape" aria-hidden="true" />
-        <div className="tl-photo-wrap">
-          <img
-            src={entry.image}
-            alt={entry.age}
-            className="tl-photo"
-            loading="lazy"
-          />
-        </div>
-        <span className="tl-stamp">{entry.age}</span>
-        <p className="tl-caption">{entry.caption}</p>
-      </motion.div>
-    </div>
+    <motion.div
+      className="film-frame"
+      initial={reduceMotion ? false : { opacity: 0, y: 40, rotate: fromSide * 2, scale: 0.92 }}
+      whileInView={{ opacity: 1, y: 0, rotate: tilt, scale: 1 }}
+      viewport={{ once: true, amount: 0.35 }}
+      transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <span className="sprockets sprockets--left" aria-hidden="true" />
+      <span className="sprockets sprockets--right" aria-hidden="true" />
+      <div className="film-photo-wrap">
+        <img src={entry.image} alt={entry.age} className="film-photo" loading="lazy" />
+        {/* subtle warmth still present, but no cropping */}
+        <div className="photo-warmth" aria-hidden="true" />
+      </div>
+      <span className="film-date">developed · {entry.age}</span>
+    </motion.div>
   );
 }
 
@@ -77,7 +63,7 @@ function ContinueButton({ onNext }) {
       transition={{ duration: 0.8, ease: 'easeOut' }}
       whileTap={{ scale: 0.96 }}
     >
-      continue
+      next reel
     </motion.button>
   );
 }
@@ -85,16 +71,24 @@ function ContinueButton({ onNext }) {
 export default function Page4({ onNext }) {
   const reduceMotion = useReducedMotion();
   const trackRef = useRef(null);
-
-  // Progress 0→1 as the track scrolls from "just entering" to
-  // "just finishing" in the viewport — drives the spine fill and
-  // its glowing head below.
   const { scrollYProgress } = useScroll({
     target: trackRef,
     offset: ['start center', 'end center'],
   });
-  const spineHeight = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
-  const dotTop = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+  const lightY = useTransform(scrollYProgress, [0, 1], ['5%', '95%']);
+  const time = useTime();
+  const flicker = useTransform(time, (t) => {
+    if (reduceMotion) return 0.7;
+    return 0.65 + 0.12 * Math.sin(t / 1200) + 0.05 * Math.sin(t / 370);
+  });
+  const lightOpacity = useTransform(
+    [scrollYProgress, flicker],
+    ([progress, flk]) => {
+      const base = progress < 0.1 ? progress / 0.1 : progress > 0.9 ? (1 - progress) / 0.1 : 1;
+      return base * flk;
+    }
+  );
+  const dustIndices = Array.from({ length: 12 }, (_, i) => i);
 
   return (
     <motion.div
@@ -104,40 +98,37 @@ export default function Page4({ onNext }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.9, ease: 'easeInOut' }}
     >
-      <span className="tl-vignette" aria-hidden="true" />
-
+      <div className="film-grain" aria-hidden="true" />
       <div className="tl-heading-block">
         <h2 className="timeline-heading">{HEADING_TEXT}</h2>
         <p className="timeline-subheading">{SUBHEADING_TEXT}</p>
       </div>
 
-      <div className="timeline-track" ref={trackRef}>
-        <span className="tl-spine-base" aria-hidden="true" />
-
-        {reduceMotion ? (
-          <span className="tl-spine-fill tl-spine-fill--static" aria-hidden="true" />
-        ) : (
-          <>
-            <motion.span
-              className="tl-spine-fill"
-              style={{ height: spineHeight }}
-              aria-hidden="true"
-            />
-            <motion.span
-              className="tl-spine-dot"
-              style={{ top: dotTop }}
-              aria-hidden="true"
-            />
-          </>
-        )}
-
-        {timelineData.map((entry, i) => (
-          <TimelineEntry
-            key={i}
-            entry={entry}
-            index={i}
-            reduceMotion={reduceMotion}
+      {!reduceMotion && (
+        <>
+          <motion.div
+            className="projector-light"
+            style={{ top: lightY, opacity: lightOpacity }}
+            aria-hidden="true"
           />
+          {dustIndices.map((i) => (
+            <DustParticle key={i} index={i} lightY={lightY} reduceMotion={reduceMotion} />
+          ))}
+        </>
+      )}
+
+      <div className="film-track" ref={trackRef}>
+        <motion.div
+          className="film-strip film-strip--shadow"
+          style={{
+            y: useTransform(scrollYProgress, [0, 1], ['0%', '3%']),
+            opacity: useTransform(scrollYProgress, [0, 0.1, 0.9, 1], [0, 0.25, 0.25, 0]),
+          }}
+          aria-hidden="true"
+        />
+        <div className="film-strip" aria-hidden="true" />
+        {timelineData.map((entry, i) => (
+          <FilmFrame key={i} entry={entry} index={i} reduceMotion={reduceMotion} />
         ))}
       </div>
 
