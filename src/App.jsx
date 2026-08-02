@@ -7,6 +7,7 @@ import BoxReveal from './components/Page1';
 import FlowerBurst from './components/Page2';
 import MessageScene from './components/Page3';
 import Timeline from './components/Page4';
+import Gallery from './components/Page5';
 
 // ─────────────────────────────────────────────────────────────
 // Scene flow (linear, no routing):
@@ -63,6 +64,13 @@ export default function App() {
         <Timeline
           key="timeline"
           onNext={() => go('gallery')}
+        />
+      )}
+
+      {scene === 'gallery' && (
+        <Gallery
+          key="gallery"
+          onNext={() => go('video')}
         />
       )}
 

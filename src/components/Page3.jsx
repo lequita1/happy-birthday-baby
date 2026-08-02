@@ -15,7 +15,7 @@ import '../css/Page3.css';
 // ─────────────────────────────────────────────────────────────
 
 const MESSAGE =
-  `Hey, it's me.\n\nI know a text would have been easier. But you're not someone I want to take the easy way with.\n\nYou showed up in my life and just... stayed. In the best way. The kind of way I didn't know I needed until you were already there.\n\nI hope today feels as good as you make everything else feel.\n\nHappy birthday.`;
+  `Happy birthday.`;
 
 const CHAR_SPEED     = 38;
 const PAUSE_WORD     = 60;
