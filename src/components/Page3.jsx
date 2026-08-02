@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useReducedMotion } from "../useMotionPreference";
+import { useReducedMotion } from '../useMotionPreference';
 import '../css/Page3.css';
 
 // ─────────────────────────────────────────────────────────────
@@ -74,11 +74,43 @@ function ContinueButton({ onNext }) {
   );
 }
 
+// ── Play prompt ─────────────────────────────────────────────
+// Redesigned: icon, rotating gradient ring, and ambient halo are
+// grouped in their own fixed-size stack (.play-icon-stack) so
+// they stay perfectly co-centered regardless of the hint text
+// below — that mismatch was the root of the old "ugly/off"
+// look. Ring rotation is pure CSS now (cheaper + auto-respects
+// prefers-reduced-motion via the stylesheet's own media query).
+function PlayPrompt({ onPlay }) {
+  return (
+    <motion.button
+      className="play-prompt"
+      onClick={onPlay}
+      aria-label="Play the message"
+      exit={{ opacity: 0, scale: 0.92 }}
+      transition={{ duration: 0.45, ease: 'easeInOut' }}
+      whileTap={{ scale: 0.94 }}
+    >
+      <span className="play-icon-stack" aria-hidden="true">
+        <span className="play-halo" />
+        <span className="play-ring" />
+        <span className="play-icon">
+          <svg viewBox="0 0 24 24" width="26" height="26">
+            <path d="M8 5v14l11-7z" fill="#ffffff" />
+          </svg>
+        </span>
+      </span>
+      <span className="play-hint">tap to hear my voice</span>
+    </motion.button>
+  );
+}
+
 export default function MessageScene({ onNext }) {
   const reduceMotion = useReducedMotion();
   const audioRef = useRef(null);
   const timersRef = useRef([]);
 
+  const [started, setStarted] = useState(false);
   const [revealedCount, setRevealedCount] = useState(0);
   const [done, setDone] = useState(false);
 
@@ -87,6 +119,8 @@ export default function MessageScene({ onNext }) {
     .join('');
 
   useEffect(() => {
+    if (!started) return;
+
     if (reduceMotion) {
       const t = setTimeout(() => {
         setRevealedCount(CHAR_COUNT);
@@ -105,6 +139,9 @@ export default function MessageScene({ onNext }) {
       });
     }
 
+    // Firing inside a click-handler-triggered effect keeps this a
+    // direct result of a user gesture, which every mobile browser
+    // (iOS Safari included) requires before it'll allow audio to play.
     if (audioRef.current) {
       audioRef.current.play().catch(() => {});
     }
@@ -113,7 +150,7 @@ export default function MessageScene({ onNext }) {
       timersRef.current.forEach(clearTimeout);
       timersRef.current = [];
     };
-  }, [reduceMotion]);
+  }, [started, reduceMotion]);
 
   const renderText = () => {
     const segments = revealedText.split('\n');
@@ -148,17 +185,29 @@ export default function MessageScene({ onNext }) {
         <span className="mf mf-2" />
       </div>
 
-      {/* NEW: dedicated scroll region — this is the fix. The button
-          below lives outside this div, pinned via CSS, so it's
-          always reachable no matter how long the message runs. */}
-      <div className="message-scroll-area">
-        <div className="message-body">
-          <p className="typewriter-text">
-            {renderText()}
-            <Cursor visible={!done} />
-          </p>
-        </div>
-      </div>
+      <AnimatePresence mode="wait">
+        {!started ? (
+          <PlayPrompt
+            key="play-prompt"
+            onPlay={() => setStarted(true)}
+          />
+        ) : (
+          <motion.div
+            key="message-scroll-area"
+            className="message-scroll-area"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="message-body">
+              <p className="typewriter-text">
+                {renderText()}
+                <Cursor visible={!done} />
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="continue-wrap">
         <AnimatePresence>
