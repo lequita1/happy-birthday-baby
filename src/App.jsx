@@ -1,16 +1,12 @@
 import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import { flowerImages } from './flowerImages';          // ← new import
+import useImagePreloader from './useImagePreloader';    // ← new import
 import CountdownGate from './components/CountdownGate';
-import GalacticReveal from './components/Page1';
+import BoxReveal from './components/Page1';
 import FlowerBurst from './components/Page2';
 import MessageScene from './components/Page3';
 import Timeline from './components/Page4';
-// Page4, Page5, Page6, Page7, Page8 — uncomment as each is built:
-// import Timeline      from './components/Page4';
-// import Gallery       from './components/Page5';
-// import VideoGreeting from './components/Page6';
-// import BirthdayWish  from './components/Page7';
-// import FinalScene    from './components/Page8';
 
 // ─────────────────────────────────────────────────────────────
 // Scene flow (linear, no routing):
@@ -26,9 +22,12 @@ export default function App() {
   const [scene, setScene] = useState('countdown');
   const go = (next) => setScene(next);
 
+  // Preload ALL flower images once, at app startup.
+  // loadedImages will be null until the images are ready,
+  // then a map of { src: HTMLImageElement }.
+  const loadedImages = useImagePreloader(flowerImages);
+
   return (
-    // AnimatePresence mode="wait" means the exiting scene fully
-    // finishes its exit animation before the next one mounts.
     <AnimatePresence mode="wait">
 
       {scene === 'countdown' && (
@@ -39,7 +38,7 @@ export default function App() {
       )}
 
       {scene === 'gift' && (
-        <GalacticReveal
+        <BoxReveal
           key="gift"
           onOpen={() => go('burst')}
         />
@@ -48,6 +47,7 @@ export default function App() {
       {scene === 'burst' && (
         <FlowerBurst
           key="burst"
+          loadedImages={loadedImages}   // ← pass preloaded images
           onComplete={() => go('message')}
         />
       )}
@@ -66,45 +66,7 @@ export default function App() {
         />
       )}
 
-      
-
-      {/* Uncomment each block as the page is built: */}
-
-      {/* {scene === 'timeline' && (
-        <Timeline
-          key="timeline"
-          onNext={() => go('gallery')}
-        />
-      )} */}
-
-      {/* {scene === 'gallery' && (
-        <Gallery
-          key="gallery"
-          onNext={() => go('video')}
-        />
-      )} */}
-
-      {/* {scene === 'video' && (
-        <VideoGreeting
-          key="video"
-          onNext={() => go('wishes')}
-        />
-      )} */}
-
-      {/* {scene === 'wishes' && (
-        <BirthdayWish
-          key="wishes"
-          onNext={() => go('final')}
-        />
-      )} */}
-
-      {/* {scene === 'final' && (
-        <FinalScene
-          key="final"
-          onReplay={() => go('gift')}
-        />
-      )} */}
-
+      {/* Uncomment as you build further pages */}
     </AnimatePresence>
   );
 }
