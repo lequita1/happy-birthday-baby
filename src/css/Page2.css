@@ -36,27 +36,33 @@
     drop-shadow(0 0 24px rgba(30, 63, 216, 0.25));
 }
 
-/* All petals originate from this centre point, biased to
-   match the box mouth (see the -40 y offset in Page2.jsx) */
+/* All petals originate from this centre point, biased slightly
+   upward to match the box mouth. Full-size + explicit centering
+   on each anchor — clearer to reason about than a 0×0 trick. */
 .burst-origin {
-  position: relative;
-  width: 0;
-  height: 0;
+  position: absolute;
+  inset: 0;
   z-index: 2;
+  pointer-events: none;
+}
+
+.petal-anchor {
+  position: absolute;
+  top: 45%;
+  left: 50%;
 }
 
 .petal-img {
   position: absolute;
-  top: 45%;
-  left: 50%;
-  margin-top: -20px;
-  margin-left: -20px;
+  top: 0;
+  left: 0;
   pointer-events: none;
   object-fit: contain;
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
 }
 
 .petal-img--static {
+  position: absolute;
   top: 45%;
   left: 50%;
   margin-top: -20px;

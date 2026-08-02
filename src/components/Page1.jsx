@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { motion} from 'framer-motion';
-import { useReducedMotion } from '../useMotionPreference';
+import { useReducedMotion } from "../useMotionPreference";
 import '../css/Page1.css';
 
 const TAP_HINT_TEXT = 'tap to open';

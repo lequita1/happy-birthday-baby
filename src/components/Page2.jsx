@@ -1,9 +1,18 @@
 import { useEffect, useMemo, useRef } from 'react';
-import { motion} from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useReducedMotion } from '../useMotionPreference';
 import { flowerImages } from '../flowerImages';
 import '../css/Page2.css';
 
+// ─────────────────────────────────────────────────────────────
+// Page2 — Flower burst — Scene 3
+//
+// Picks up right where Page1 left off: the box is shown already
+// open (same pose, same position) and flowers spill out of its
+// mouth in a spiral, filling the full screen — corners included.
+//
+// Uses whatever PNGs are listed in flowerImages.js.
+// ─────────────────────────────────────────────────────────────
 
 function createRandom(seed) {
   let s = seed;
@@ -45,29 +54,47 @@ function usePetals(count) {
   }, [count]);
 }
 
+// Logs once per broken path instead of failing silently — if you
+// ever see this in the console, the filename in flowerImages.js
+// doesn't match what's actually in /public/flowers/.
+function handleImgError(src) {
+  console.warn(`[FlowerBurst] Image failed to load: ${src} — check the filename/path in flowerImages.js against your public/flowers/ folder.`);
+}
+
 function Petal({ data }) {
   return (
-    <motion.img
-      src={data.image}
-      alt=""
-      className="petal-img"
-      style={{ width: data.size, height: data.size }}
-      initial={{ x: 0, y: 0, opacity: 0, scale: 0.1, rotate: 0 }}
-      animate={{
-        x: data.x,
-        y: data.y,
-        scale: [0.1, 1.15, 1],
-        rotate: data.rotate,
-        opacity: [0, 1, 1, 0],
-      }}
+    <motion.div
+      className="petal-anchor"
+      initial={{ x: 0, y: 0, rotate: 0 }}
+      animate={{ x: data.x, y: data.y, rotate: data.rotate }}
       transition={{
+        type: 'tween',
         duration: data.duration,
         delay: data.delay,
         ease: [0.15, 0.85, 0.35, 1],
-        opacity: { times: [0, 0.12, 0.62, 1], ease: 'linear' },
-        scale: { times: [0, 0.5, 1] },
       }}
-    />
+    >
+      <motion.img
+        src={data.image}
+        alt=""
+        className="petal-img"
+        style={{
+          width: data.size,
+          height: data.size,
+          marginLeft: -data.size / 2,
+          marginTop: -data.size / 2,
+        }}
+        onError={() => handleImgError(data.image)}
+        initial={{ opacity: 0, scale: 0.1 }}
+        animate={{ opacity: [0, 1, 1, 0], scale: [0.1, 1.15, 1, 1] }}
+        transition={{
+          duration: data.duration,
+          delay: data.delay,
+          times: [0, 0.15, 0.7, 1],
+          ease: 'easeOut',
+        }}
+      />
+    </motion.div>
   );
 }
 
@@ -101,6 +128,14 @@ export default function FlowerBurst({ onComplete }) {
   const calledRef = useRef(false);
 
   useEffect(() => {
+    // Quick sanity check — open devtools console after the box opens.
+    // You should see non-zero, varied x/y values here. If these all
+    // look tiny or identical, the bug is in the math, not the motion.
+    console.log(
+      '[FlowerBurst] sample petal targets:',
+      petals.slice(0, 3).map((p) => ({ x: Math.round(p.x), y: Math.round(p.y) }))
+    );
+
     let timeoutMs;
     if (reduceMotion) {
       timeoutMs = 1300;
@@ -138,6 +173,7 @@ export default function FlowerBurst({ onComplete }) {
               src={p.image}
               alt=""
               className="petal-img petal-img--static"
+              onError={() => handleImgError(p.image)}
               style={{
                 width: p.size,
                 height: p.size,

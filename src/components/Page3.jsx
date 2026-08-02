@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence} from 'framer-motion';
-import { useReducedMotion } from '../useMotionPreference';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useReducedMotion } from "../useMotionPreference";
 import '../css/Page3.css';
 
 // ─────────────────────────────────────────────────────────────

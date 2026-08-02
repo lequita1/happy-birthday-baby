@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence} from 'framer-motion';
 import { TARGET_DATE } from '../config';
-import { useReducedMotion } from '../useMotionPreferenceuse';
+import { useReducedMotion } from "../useMotionPreference";
 import '../css/CountDownGate.css';
 
-const LABEL_TEXT = 'until then';
+const LABEL_TEXT = 'ano kaya meron';
 
 function getTimeParts(target) {
   const diff = Math.max(0, target.getTime() - Date.now());

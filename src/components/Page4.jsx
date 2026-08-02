@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useReducedMotion } from '../useMotionPreference';
+import { useReducedMotion } from "../useMotionPreference";
 import { timelineData } from '../timelineData';
 import '../css/Page4.css';
 
