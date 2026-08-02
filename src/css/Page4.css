@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,300&family=Inter:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,300..500&family=Inter:wght@400;500;600&display=swap');
+
+/* ═══════════════════════════════════════════════════
+   Page4 — Timeline / Scrapbook (Buzz palette)
+   ═══════════════════════════════════════════════════ */
 
 .timeline-scene {
   position: relative;
@@ -15,127 +19,230 @@
     );
 }
 
+/* Soft vignette — the one "film" touch on the whole scene, kept
+   subtle so it reads as mood, not a filter slapped on top. */
+.tl-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 85% 70% at 50% 30%,
+    transparent 55%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+}
+
+/* ── Heading ─────────────────────────────────────── */
+
+.tl-heading-block {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  margin: 0 0 clamp(3rem, 9vw, 4.5rem);
+}
+
 .timeline-heading {
   font-family: 'Fraunces', serif;
   font-style: italic;
   font-weight: 300;
   font-size: clamp(1.4rem, 4vw, 2.1rem);
   color: #ffffff;
-  text-align: center;
-  margin: 0 0 clamp(3rem, 9vw, 4.5rem);
+  margin: 0 0 0.5rem;
   text-shadow: 0 0 40px rgba(255, 255, 255, 0.08);
 }
 
-.timeline-track {
-  position: relative;
-  max-width: min(680px, 92vw);
-  margin: 0 auto;
-  padding-left: clamp(2.2rem, 7vw, 2.75rem);
+.timeline-subheading {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
 }
 
-.timeline-line {
+/* ── Track / spine ───────────────────────────────── */
+
+.timeline-track {
+  position: relative;
+  z-index: 1;
+  max-width: min(560px, 92vw);
+  margin: 0 auto;
+  padding-left: clamp(2.4rem, 8vw, 3rem);
+}
+
+.tl-spine-base {
   position: absolute;
-  top: 6px;
-  bottom: 6px;
-  left: clamp(0.55rem, 2vw, 0.7rem);
+  top: 4px;
+  bottom: 4px;
+  left: clamp(0.65rem, 2.4vw, 0.85rem);
   width: 2px;
   background: linear-gradient(
     180deg,
-    rgba(77, 111, 255, 0.05) 0%,
-    rgba(77, 111, 255, 0.55) 12%,
-    rgba(255, 58, 58, 0.4) 88%,
-    rgba(255, 58, 58, 0.05) 100%
+    rgba(77, 111, 255, 0.18) 0%,
+    rgba(255, 58, 58, 0.18) 100%
   );
+  border-radius: 999px;
 }
 
+/* The "already traveled" light trail — grows with scroll */
+.tl-spine-fill {
+  position: absolute;
+  top: 4px;
+  left: clamp(0.65rem, 2.4vw, 0.85rem);
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    #4D6FFF 0%,
+    #ffffff 55%,
+    #FF3A3A 100%
+  );
+  box-shadow: 0 0 10px 1px rgba(77, 111, 255, 0.55);
+  border-radius: 999px;
+  transform-origin: top;
+}
 
-.timeline-entry {
+.tl-spine-fill--static {
+  height: 100%;
+  box-shadow: none;
+  opacity: 0.6;
+}
+
+/* Glowing head that travels with scroll — same visual language
+   as the shooting star on Page1 */
+.tl-spine-dot {
+  position: absolute;
+  left: clamp(0.65rem, 2.4vw, 0.85rem);
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow:
+    0 0 10px 3px rgba(255, 255, 255, 0.85),
+    0 0 22px 7px rgba(77, 111, 255, 0.5);
+  transform: translate(-50%, -50%);
+}
+
+/* ── Entries ─────────────────────────────────────── */
+
+.tl-entry {
   position: relative;
-  margin-bottom: clamp(3rem, 8vw, 4.5rem);
+  margin-bottom: clamp(3.5rem, 9vw, 5rem);
+  display: flex;
+  justify-content: flex-start;
 }
 
-.timeline-entry:last-child {
+.tl-entry:last-child {
   margin-bottom: 0;
 }
 
-.timeline-node {
+/* Gentle zig-zag — odd cards nudge right. Subtle on purpose; a
+   full alternating-column layout felt cramped on mobile. */
+.tl-entry--b {
+  justify-content: flex-start;
+  padding-left: clamp(1rem, 6vw, 2.2rem);
+}
+
+.tl-node {
   position: absolute;
-  top: 1.6rem;
-  left: clamp(-2.2rem, -7vw, -2.75rem);
-  width: 13px;
-  height: 13px;
+  top: 1.9rem;
+  left: clamp(-2.4rem, -8vw, -3rem);
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   background: #ffffff;
-  box-shadow: 0 0 0 5px rgba(77, 111, 255, 0.22), 0 0 12px 2px rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 0 0 5px rgba(77, 111, 255, 0.18),
+    0 0 14px 3px rgba(255, 255, 255, 0.5);
   z-index: 2;
 }
 
-.timeline-card {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 18px;
-  padding: clamp(1rem, 3vw, 1.5rem);
-  backdrop-filter: blur(6px);
+/* ── Polaroid card ───────────────────────────────── */
 
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.tl-card {
+  position: relative;
+  width: 100%;
+  max-width: min(300px, 76vw);
+  background: #F6F1E7; /* warm cream — genuine polaroid paper */
+  padding: 0.85rem 0.85rem 1.3rem;
+  border-radius: 3px;
+  box-shadow:
+    0 16px 32px rgba(0, 0, 0, 0.5),
+    0 3px 8px rgba(0, 0, 0, 0.3);
 }
 
-@media (min-width: 560px) {
-  .timeline-card {
-    flex-direction: row;
-    align-items: center;
-    gap: 1.5rem;
-  }
-
-  .timeline-image-wrap {
-    flex: 0 0 42%;
-  }
-
-  .timeline-text {
-    flex: 1 1 auto;
-  }
+.tl-tape {
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  width: 60px;
+  height: 22px;
+  transform: translateX(-50%) rotate(-3deg);
+  background: linear-gradient(
+    180deg,
+    rgba(77, 111, 255, 0.55),
+    rgba(77, 111, 255, 0.32)
+  );
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.16) 0 2px,
+    transparent 2px 7px
+  );
+  opacity: 0.9;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
 }
 
-.timeline-image-wrap {
+.tl-photo-wrap {
   width: 100%;
-  aspect-ratio: 4 / 3;
-  border-radius: 12px;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.3);
+  background: #0e0e0e;
 }
 
-.timeline-image {
+.tl-photo {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.timeline-age {
-  display: block;
+/* Crimson ink-stamp — doubles as the age label */
+.tl-stamp {
+  position: absolute;
+  top: -10px;
+  right: -8px;
+  background: #fffdf8;
+  border: 1.5px dashed #8B1A1A;
+  color: #6B0F1A;
   font-family: 'Inter', system-ui, sans-serif;
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #4D6FFF;
-  margin-bottom: 0.5rem;
+  padding: 0.22rem 0.5rem;
+  border-radius: 3px;
+  transform: rotate(6deg);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
 }
 
-.timeline-caption {
+.tl-caption {
+  margin: 0.95rem 0 0;
   font-family: 'Fraunces', serif;
   font-style: italic;
-  font-weight: 300;
-  font-size: clamp(1.05rem, 2.4vw, 1.3rem);
-  line-height: 1.6;
-  color: #ffffff;
-  margin: 0;
+  font-weight: 400;
+  font-size: clamp(0.92rem, 2.2vw, 1.05rem);
+  line-height: 1.55;
+  color: #2A1B18;
+  text-align: center;
 }
 
+/* ── Continue button ─────────────────────────────── */
+
 .timeline-continue-wrap {
+  position: relative;
+  z-index: 1;
   display: flex;
   justify-content: center;
   margin-top: clamp(3rem, 8vw, 4.5rem);

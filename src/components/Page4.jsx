@@ -1,44 +1,66 @@
-import { motion } from 'framer-motion';
-import { useReducedMotion } from "../useMotionPreference";
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useReducedMotion } from '../useMotionPreference';
 import { timelineData } from '../timelineData';
 import '../css/Page4.css';
 
 // ─────────────────────────────────────────────────────────────
 // Page4 — Timeline (baby → present)
 //
-// Single-column layout at every screen size — no alternating
-// left/right columns. That approach looked cramped on mobile
-// and small on desktop since each card only got ~44% width;
-// this way every card gets full width up to a generous max,
-// and the same markup/CSS works everywhere.
+// CONCEPT: a scrapbook pinned to the Buzz world. Each memory is
+// a polaroid — cream border, small tape strip, a crimson ink
+// stamp for the age — tilted slightly like it was just dropped
+// onto the page. That's where "nostalgic" comes from.
 //
-// Data-driven from timelineData.js — edit that file only.
+// The spine ties it back to the rest of the site: it's not a
+// static line, it's a light trail that GROWS as you scroll, with
+// a small glowing head — the same visual language as the shooting
+// star from Page1's starfield. Built with useScroll/useTransform
+// so it's driven by actual scroll position, not a timer.
+//
+// Data-driven from timelineData.js — same shape as before, only
+// this file changed:
+//   { image, age, caption }
 // ─────────────────────────────────────────────────────────────
 
 const HEADING_TEXT = 'every step got us here';
+const SUBHEADING_TEXT = 'a little scrapbook, just for you';
+
+// Small deterministic tilt per card so photos read as "dropped
+// on the page" rather than a rigid grid. Alternating +/- keeps
+// it from feeling like they're all leaning the same way.
+const TILTS = [-4, 3, -3.5, 4.5, -2.5, 3.5, -4.5, 2.5];
 
 function TimelineEntry({ entry, index, reduceMotion }) {
-  // Subtle alternating entrance direction only — purely a visual
-  // detail, doesn't affect layout.
-  const offsetX = index % 2 === 0 ? -18 : 18;
+  const tilt = TILTS[index % TILTS.length];
+  const fromSide = index % 2 === 0 ? -1 : 1;
+  const zigzag = index % 2 === 1; // odd cards nudge slightly right
 
   return (
-    <div className="timeline-entry">
-      <span className="timeline-node" aria-hidden="true" />
+    <div className={`tl-entry${zigzag ? ' tl-entry--b' : ''}`}>
+      <span className="tl-node" aria-hidden="true" />
       <motion.div
-        className="timeline-card"
-        initial={reduceMotion ? false : { opacity: 0, x: offsetX, y: 20 }}
-        whileInView={{ opacity: 1, x: 0, y: 0 }}
-        viewport={{ once: true, amount: 0.35 }}
-        transition={{ duration: 0.7, ease: 'easeOut' }}
+        className="tl-card"
+        initial={
+          reduceMotion
+            ? false
+            : { opacity: 0, y: 34, x: fromSide * 14, rotate: 0, scale: 0.88 }
+        }
+        whileInView={{ opacity: 1, y: 0, x: 0, rotate: tilt, scale: 1 }}
+        viewport={{ once: true, amount: 0.4 }}
+        transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="timeline-image-wrap">
-          <img src={entry.image} alt={entry.age} className="timeline-image" />
+        <span className="tl-tape" aria-hidden="true" />
+        <div className="tl-photo-wrap">
+          <img
+            src={entry.image}
+            alt={entry.age}
+            className="tl-photo"
+            loading="lazy"
+          />
         </div>
-        <div className="timeline-text">
-          <span className="timeline-age">{entry.age}</span>
-          <p className="timeline-caption">{entry.caption}</p>
-        </div>
+        <span className="tl-stamp">{entry.age}</span>
+        <p className="tl-caption">{entry.caption}</p>
       </motion.div>
     </div>
   );
@@ -62,6 +84,17 @@ function ContinueButton({ onNext }) {
 
 export default function Page4({ onNext }) {
   const reduceMotion = useReducedMotion();
+  const trackRef = useRef(null);
+
+  // Progress 0→1 as the track scrolls from "just entering" to
+  // "just finishing" in the viewport — drives the spine fill and
+  // its glowing head below.
+  const { scrollYProgress } = useScroll({
+    target: trackRef,
+    offset: ['start center', 'end center'],
+  });
+  const spineHeight = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+  const dotTop = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
 
   return (
     <motion.div
@@ -71,10 +104,33 @@ export default function Page4({ onNext }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.9, ease: 'easeInOut' }}
     >
-      <h2 className="timeline-heading">{HEADING_TEXT}</h2>
+      <span className="tl-vignette" aria-hidden="true" />
 
-      <div className="timeline-track">
-        <span className="timeline-line" aria-hidden="true" />
+      <div className="tl-heading-block">
+        <h2 className="timeline-heading">{HEADING_TEXT}</h2>
+        <p className="timeline-subheading">{SUBHEADING_TEXT}</p>
+      </div>
+
+      <div className="timeline-track" ref={trackRef}>
+        <span className="tl-spine-base" aria-hidden="true" />
+
+        {reduceMotion ? (
+          <span className="tl-spine-fill tl-spine-fill--static" aria-hidden="true" />
+        ) : (
+          <>
+            <motion.span
+              className="tl-spine-fill"
+              style={{ height: spineHeight }}
+              aria-hidden="true"
+            />
+            <motion.span
+              className="tl-spine-dot"
+              style={{ top: dotTop }}
+              aria-hidden="true"
+            />
+          </>
+        )}
+
         {timelineData.map((entry, i) => (
           <TimelineEntry
             key={i}
