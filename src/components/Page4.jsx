@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useReducedMotion } from '../useMotionPreference';
 import { timelineData } from '../timelineData';
@@ -12,6 +12,22 @@ import '../css/Page4.css';
 // Frames show photos only. When the active entry has a video,
 // a separate hint fades in below the caption — tap that to play.
 //   { image, age, caption, video: '/videos/xyz.mp4' }  // optional
+//
+// ── How the loop + centering works ──────────────────────────
+// The strip renders the data set 3x back to back: [prev][home][next].
+// We start scrolled into the middle ("home") copy, which means there's
+// always a full copy's worth of frames to scroll into on either side.
+//
+// Which frame is "active" (centered) is measured live with an
+// IntersectionObserver watching a thin strip in the dead center of the
+// track — not cached math — so it can never drift out of sync with what
+// the user actually sees, on any screen size, at any frame count.
+//
+// Once scrolling fully settles, if the active frame is in the prev/next
+// copy, we silently (no animation) shift scrollLeft by exactly one copy's
+// width so the same photo is now the "home copy" equivalent. Because
+// every frame is a fixed aspect-ratio (identical width), that shift is
+// invisible — the user just keeps scrolling and it feels endless.
 // ─────────────────────────────────────────────────────────────
 
 const HEADING_TEXT = 'every step got us here';
@@ -19,72 +35,181 @@ const SCRUB_HINT_TEXT = 'scrub through';
 const VIDEO_HINT_LABEL = 'watch this moment';
 const CONTINUE_LABEL = 'continue';
 
-function useScrollProgress(ref) {
-  const [progress, setProgress] = useState(0);
+function useLoopedFilmstrip(trackRef, count, { reduceMotion }) {
+  const total = count * 3;
+  const [tripleActive, setTripleActive] = useState(count);
+  const tripleActiveRef = useRef(count);
+  const rafIdRef = useRef(null);
+  const watchingRef = useRef(false);
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    let ticking = false;
-    const update = () => {
-      const max = el.scrollWidth - el.clientWidth;
-      setProgress(max > 0 ? el.scrollLeft / max : 0);
-      ticking = false;
-    };
-
-    const onScroll = () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(update);
+  const centerOn = useCallback(
+    (idx, behavior = 'auto') => {
+      const el = trackRef.current;
+      const child = el?.children[idx];
+      if (!el || !child) return;
+      const target = child.offsetLeft + child.offsetWidth / 2 - el.clientWidth / 2;
+      if (behavior === 'auto') {
+        el.scrollLeft = target;
+      } else {
+        el.scrollTo({ left: target, behavior });
       }
-    };
+    },
+    [trackRef]
+  );
 
-    update();
-    el.addEventListener('scroll', onScroll, { passive: true });
-    return () => el.removeEventListener('scroll', onScroll);
-  }, [ref]);
+  // Land on the middle copy before first paint so there's a full loop's
+  // worth of buffer available immediately in both directions.
+  useLayoutEffect(() => {
+    if (count <= 0) return;
+    centerOn(count, 'auto');
+    tripleActiveRef.current = count;
+    setTripleActive(count);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [count]);
 
-  return progress;
-}
-
-function useActiveFrame(trackRef) {
-  const [active, setActive] = useState(0);
-
+  // Single source of truth for "is this actively scrolling" + the
+  // settle-triggered loop re-anchor.
+  //
+  // Rather than guessing a fixed "probably done scrolling" delay (which
+  // can fire *before* a native snap/momentum animation has actually
+  // finished on a slower device — visibly yanking the frame mid-motion),
+  // this polls scrollLeft on every animation frame and only calls it
+  // settled once the position hasn't moved for a few consecutive frames.
+  // That adapts automatically to however long the browser's own
+  // deceleration/snap takes, on any device. `scrollend` (where supported)
+  // is used as an immediate, precise short-circuit on top of that.
   useEffect(() => {
     const el = trackRef.current;
-    if (!el) return;
+    if (!el || count <= 0) return;
 
-    let ticking = false;
-    const update = () => {
-      const center = el.scrollLeft + el.clientWidth / 2;
-      let closest = 0;
-      let closestDist = Infinity;
-      Array.from(el.children).forEach((child, i) => {
-        const childCenter = child.offsetLeft + child.offsetWidth / 2;
-        const dist = Math.abs(childCenter - center);
-        if (dist < closestDist) {
-          closestDist = dist;
-          closest = i;
-        }
-      });
-      setActive(closest);
-      ticking = false;
-    };
+    const settle = () => {
+      watchingRef.current = false;
+      if (rafIdRef.current) {
+        cancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = null;
+      }
+      el.classList.remove('is-scrolling');
 
-    const onScroll = () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(update);
+      const idx = tripleActiveRef.current;
+      if (idx < count) {
+        centerOn(idx + count, 'auto');
+        tripleActiveRef.current = idx + count;
+        setTripleActive(idx + count);
+      } else if (idx >= count * 2) {
+        centerOn(idx - count, 'auto');
+        tripleActiveRef.current = idx - count;
+        setTripleActive(idx - count);
       }
     };
 
-    update();
-    el.addEventListener('scroll', onScroll, { passive: true });
-    return () => el.removeEventListener('scroll', onScroll);
-  }, [trackRef]);
+    let lastLeft = null;
+    let stableFrames = 0;
 
-  return active;
+    const pollForRest = () => {
+      const left = el.scrollLeft;
+      if (lastLeft !== null && Math.abs(left - lastLeft) < 0.5) {
+        stableFrames += 1;
+      } else {
+        stableFrames = 0;
+      }
+      lastLeft = left;
+
+      if (stableFrames >= 3) {
+        settle();
+        return;
+      }
+      rafIdRef.current = requestAnimationFrame(pollForRest);
+    };
+
+    const onScroll = () => {
+      el.classList.add('is-scrolling');
+      if (watchingRef.current) return;
+      watchingRef.current = true;
+      lastLeft = null;
+      stableFrames = 0;
+      rafIdRef.current = requestAnimationFrame(pollForRest);
+    };
+
+    const onScrollEnd = () => {
+      settle();
+    };
+
+    el.addEventListener('scroll', onScroll, { passive: true });
+    el.addEventListener('scrollend', onScrollEnd);
+    return () => {
+      el.removeEventListener('scroll', onScroll);
+      el.removeEventListener('scrollend', onScrollEnd);
+      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+    };
+  }, [trackRef, count, centerOn]);
+
+  // Re-center the current frame whenever the track's own box changes size
+  // — orientation change, window resize, and (crucially, on mobile) the
+  // browser chrome show/hide that changes available height without
+  // firing a window `resize` event. This is what keeps frame geometry
+  // from ever going stale.
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el || count <= 0) return;
+    const ro = new ResizeObserver(() => centerOn(tripleActiveRef.current, 'auto'));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [trackRef, count, centerOn]);
+
+  // Live "what's actually centered" detection. A thin (~2%) strip in the
+  // middle of the track is the observation root-margin; whichever frame
+  // overlaps it most is the active one. This reflects real rendered
+  // geometry, so it can't drift out of sync the way a cached measurement
+  // can, and it needs no changes if more photos are added later.
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el || count <= 0) return;
+
+    const frames = Array.from(el.children);
+    const indexOf = new WeakMap();
+    frames.forEach((f, i) => indexOf.set(f, i));
+
+    const thresholds = Array.from({ length: 21 }, (_, i) => i / 20);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        let best = null;
+        for (const en of entries) {
+          if (en.isIntersecting && (!best || en.intersectionRatio > best.intersectionRatio)) {
+            best = en;
+          }
+        }
+        if (!best) return;
+        const idx = indexOf.get(best.target);
+        if (idx === undefined) return;
+        tripleActiveRef.current = idx;
+        setTripleActive(idx);
+      },
+      { root: el, threshold: thresholds, rootMargin: '0px -49% 0px -49%' }
+    );
+
+    frames.forEach((f) => observer.observe(f));
+    return () => observer.disconnect();
+  }, [trackRef, count]);
+
+  const goTo = useCallback(
+    (delta) => {
+      const el = trackRef.current;
+      if (!el) return;
+      const target = Math.min(Math.max(tripleActiveRef.current + delta, 0), total - 1);
+      const child = el.children[target];
+      if (child) {
+        child.scrollIntoView({
+          behavior: reduceMotion ? 'auto' : 'smooth',
+          inline: 'center',
+          block: 'nearest',
+        });
+      }
+    },
+    [trackRef, total, reduceMotion]
+  );
+
+  const realIndex = count > 0 ? ((tripleActive % count) + count) % count : 0;
+  return { realIndex, tripleActive, goTo };
 }
 
 function useDragScroll(ref) {
@@ -145,18 +270,30 @@ function useWheelToHorizontal(ref) {
   }, [ref]);
 }
 
-function Frame({ entry, isActive }) {
+const Frame = memo(function Frame({ entry, isActive, index, registerRef }) {
   return (
     <div className={`filmstrip-frame${isActive ? ' is-active' : ''}`}>
       <span className="washi-tape washi-tape--tl" aria-hidden="true" />
       <span className="corner-sprig corner-sprig--br" aria-hidden="true" />
       <div className="frame-image-wrap">
-        <img src={entry.image} alt={entry.age} className="frame-image" loading="lazy" />
+        {/* src is injected by the IntersectionObserver in Timeline so only
+            the frames near the viewport decode the (large) photo at a
+            time. width/height + aspect-ratio avoid layout shift on load. */}
+        <img
+          ref={(el) => registerRef(index, el)}
+          data-src={entry.image}
+          alt={entry.age}
+          className="frame-image"
+          loading="lazy"
+          decoding="async"
+          width="450"
+          height="600"
+        />
         <span className="frame-timestamp">{entry.age}</span>
       </div>
     </div>
   );
-}
+});
 
 function VideoHint({ onPlay, reduceMotion }) {
   return (
@@ -287,33 +424,80 @@ function VideoModal({ src, onClose }) {
 export default function Timeline({ onNext }) {
   const reduceMotion = useReducedMotion();
   const trackRef = useRef(null);
-  const progress = useScrollProgress(trackRef);
-  const activeIndex = useActiveFrame(trackRef);
+  const imgRefs = useRef([]);
+  const registerRef = useCallback((i, el) => {
+    imgRefs.current[i] = el;
+  }, []);
   const [videoSrc, setVideoSrc] = useState(null);
+
+  const count = timelineData.length;
+
+  // Three back-to-back copies of the data: [prev][home][next]. This is
+  // what gives the strip a full loop's worth of buffer to scroll into on
+  // either side, so it can be re-anchored invisibly and feel endless.
+  // Scales automatically — add more entries to timelineData and this
+  // still just works, no other changes needed.
+  const loopData = useMemo(() => {
+    const out = [];
+    for (let copy = 0; copy < 3; copy++) {
+      timelineData.forEach((entry, i) => {
+        out.push({ ...entry, __realIndex: i, __loopKey: `${copy}-${i}` });
+      });
+    }
+    return out;
+  }, []);
+
+  const { realIndex, tripleActive, goTo } = useLoopedFilmstrip(trackRef, count, { reduceMotion });
 
   useDragScroll(trackRef);
   useWheelToHorizontal(trackRef);
 
-  const goToIndex = (i) => {
-    const el = trackRef.current;
-    if (!el) return;
-    const clamped = Math.max(0, Math.min(timelineData.length - 1, i));
-    const child = el.children[clamped];
-    if (child) child.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-  };
+  // Deferred image loading: swap data-src -> src only for frames that
+  // approach the viewport, so only a handful of large photos decode at
+  // once even though the strip now renders 3 copies of the data.
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((en) => {
+          const img = en.target;
+          if (en.isIntersecting && !img.getAttribute('src')) {
+            const src = img.getAttribute('data-src');
+            if (src) img.src = src;
+          }
+        });
+      },
+      {
+        root: track,
+        rootMargin: '0px 150% 0px 150%',
+      }
+    );
+
+    imgRefs.current.forEach((el) => el && observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const el = trackRef.current;
     if (!el) return;
     const onKeyDown = (e) => {
-      if (e.key === 'ArrowRight') { e.preventDefault(); goToIndex(activeIndex + 1); }
-      if (e.key === 'ArrowLeft')  { e.preventDefault(); goToIndex(activeIndex - 1); }
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        goTo(1);
+      }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        goTo(-1);
+      }
     };
     el.addEventListener('keydown', onKeyDown);
     return () => el.removeEventListener('keydown', onKeyDown);
-  }, [activeIndex]);
+  }, [goTo]);
 
-  const activeEntry = timelineData[activeIndex];
+  const activeEntry = timelineData[realIndex];
+  const progress = count > 1 ? realIndex / (count - 1) : 0;
 
   return (
     <motion.div
@@ -337,21 +521,27 @@ export default function Timeline({ onNext }) {
       <div className="filmstrip-track-wrap">
         <button
           className="filmstrip-nav filmstrip-nav--left"
-          onClick={() => goToIndex(activeIndex - 1)}
+          onClick={() => goTo(-1)}
           aria-label="Previous memory"
         >
           ‹
         </button>
 
         <div className="filmstrip-track" ref={trackRef} tabIndex={0}>
-          {timelineData.map((entry, i) => (
-            <Frame key={i} entry={entry} isActive={i === activeIndex} />
+          {loopData.map((entry, i) => (
+            <Frame
+              key={entry.__loopKey}
+              entry={entry}
+              index={i}
+              isActive={i === tripleActive}
+              registerRef={registerRef}
+            />
           ))}
         </div>
 
         <button
           className="filmstrip-nav filmstrip-nav--right"
-          onClick={() => goToIndex(activeIndex + 1)}
+          onClick={() => goTo(1)}
           aria-label="Next memory"
         >
           ›
@@ -359,9 +549,9 @@ export default function Timeline({ onNext }) {
       </div>
 
       <div className="filmstrip-detail">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="popLayout">
           <motion.p
-            key={`caption-${activeIndex}`}
+            key={`caption-${realIndex}`}
             className="filmstrip-caption"
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
@@ -375,7 +565,7 @@ export default function Timeline({ onNext }) {
         <AnimatePresence mode="wait">
           {activeEntry?.video && (
             <VideoHint
-              key={`video-hint-${activeIndex}`}
+              key={`video-hint-${realIndex}`}
               onPlay={() => setVideoSrc(activeEntry.video)}
               reduceMotion={reduceMotion}
             />

@@ -15,7 +15,7 @@ import '../css/Page3.css';
 //    voice, nudge CHAR_SPEED up or down below.
 // ─────────────────────────────────────────────────────────────
 
-const MESSAGE =
+/*const MESSAGE =
   `Happy birthday, baby ko <33
   Bilis ng panahon no? habang nagkakalkal ako ng pictures mo super small mo lang mga ganto 🤌 hehe
   I hope you know how special ikaw syempre di lang sakin, pero sa lahat din ng swerteng tao na kasama mo sa life mo.
@@ -31,7 +31,9 @@ const MESSAGE =
   Andaming stress recently baby at alam kong pagod na pagod ka.. So please allow yourself na magcelebrate ngayon. Be proud na anlayo na ng narating mo. Tas don't be too hard on yourself din by, di naman lahat alam mo rin po agad. Marami pa ikaw pag dadaanan, memories na magagawa, lugar na makkita at mapupuntahan, dreams to chase pa, at ibang version mo pa na makkita. I hope na kahit papaano, you can feel na I am proud of you and I love you so much baby ko <33
   Thank you for letting me be part of your life baby. I hope you never forget na nandito ako lagi to cheer for you, believe in you and support you. Sana sa pag next next next mo here sa website matuwa ka at maisip mo lahat ng sinabi ko rito. HAAPPPYYY HAPPPPYYYYYYY BIRTHDAYYYYYYY BABYYYYYY. U DESSERVVEE TO BE CELEBRATED DI LANG TODAY PERO ARAW ARAWWWWW.
   MAHAAAAAAALLL NA MAHAAAALL NA MAHAAAL KITAAA ILOVEYOUU BYYY HAPPYYY 21ST MWAAAAHHHH 
-  `;
+  `;*/
+
+const MESSAGE ='baby'
 
 const CHAR_SPEED     = 10;
 const PAUSE_WORD     = 60;

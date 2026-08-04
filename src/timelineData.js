@@ -134,14 +134,91 @@ export const timelineData = [
     video: '/videos/vid1.mp4',
   },
   {
-    image: '/images/18.jpg',
+    image: '/images/24.jpg',
     age: 'Nakatayo na',
     caption: 'Figuring it all out, one day at a time.',
     video: '/videos/vid1.mp4',
   },
   {
-    image: '/images/12.jpg',
+    image: '/images/25.jpg',
     age: 'Today',
     caption: 'Still the best part of my day.',
+  },
+    {
+    image: '/images/26.jpg',
+    age: '1 year old',
+    caption: 'Already stealing every scene.',
+    video: '/videos/vid1.mp4',
+  },
+  {
+    image: '/images/27.jpg',
+    age: 'Nakatayo na',
+    caption: 'Figuring it all out, one day at a time.',
+    video: '/videos/vid1.mp4',
+  },
+  {
+    image: '/images/28.jpg',
+    age: 'Today',
+    caption: 'Still the best part of my day.',
+  },
+  {
+    image: '/images/29.jpg',
+    age: 'Today',
+    caption: 'Still the best part of my day.',
+  },
+    {
+    image: '/images/30.jpg',
+    age: 'Nakatayo na',
+    caption: 'Figuring it all out, one day at a time.',
+    video: '/videos/vid1.mp4',
+  },
+  {
+    image: '/images/31.jpg',
+    age: 'Today',
+    caption: 'Still the best part of my day.',
+  },
+    {
+    image: '/images/32.jpg',
+    age: '1 year old',
+    caption: 'Already stealing every scene.',
+    video: '/videos/vid1.mp4',
+  },
+  {
+    image: '/images/33.jpg',
+    age: 'Nakatayo na',
+    caption: 'Figuring it all out, one day at a time.',
+    video: '/videos/vid1.mp4',
+  },
+  {
+    image: '/images/34.jpg',
+    age: 'Today',
+    caption: 'Still the best part of my day.',
+  },
+  {
+    image: '/images/35.jpg',
+    age: 'Today',
+    caption: 'Still the best part of my day.',
+  },
+  {
+    image: '/images/36.jpg',
+    age: 'Today',
+    caption: 'Still the best part of my day.',
+  },
+    {
+    image: '/images/37.jpg',
+    age: 'Nakatayo na',
+    caption: 'Figuring it all out, one day at a time.',
+    video: '/videos/vid1.mp4',
+  },
+  {
+    image: '/images/38.jpg',
+    age: 'Today',
+    caption: 'Still the best part of my day.',
+  },
+    {
+    image: '/images/39.jpg',
+    age: '1 year old',
+    caption: 'Already stealing every scene.',
+    video: '/videos/vid1.mp4',
   }
 ];

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useReducedMotion } from '../useMotionPreference';
 import { flowerImages } from '../flowerImages';
@@ -13,20 +13,18 @@ function createRandom(seed) {
   };
 }
 
-const OVERLAP = 0.5;
 const JITTER_FRACTION = 0.2;
 const SIZE_JITTER = [0.8, 1.3];
 const STAGGER_WINDOW = 0.6;
 const FLIGHT_DURATION = 0.85;
 
-function useFlowerField() {
+function useFlowerField(w, h) {
   return useMemo(() => {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
     const anchorX = w * 0.5;
     const anchorY = h * 0.45;
 
-    const TARGET_CELLS = w < 600 ? 25 : 60;
+    const TARGET_CELLS = w < 600 ? 35 : 60;
+    const OVERLAP = w < 600 ? 0.3 : 0.5;
     const cellSize = Math.sqrt((w * h) / TARGET_CELLS);
     const baseFlowerSize = cellSize / OVERLAP;
 
@@ -61,7 +59,7 @@ function useFlowerField() {
       delay: (cell.dist / maxDist) * STAGGER_WINDOW + rng() * 0.04,
       duration: FLIGHT_DURATION + rng() * 0.2,
     }));
-  }, []);
+  }, [w, h]);
 }
 
 function OpenBox() {
@@ -88,9 +86,50 @@ function OpenBox() {
   );
 }
 
+function BurstLoading() {
+  return (
+    <motion.div
+      className="burst-loader"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
+    >
+      <span className="burst-loader-dot" />
+      <span className="burst-loader-dot" />
+      <span className="burst-loader-dot" />
+    </motion.div>
+  );
+}
+
 export default function FlowerBurst({ onComplete, loadedImages }) {
   const reduceMotion = useReducedMotion();
-  const petals = useFlowerField();
+  const [size, setSize] = useState(() => {
+    const vv = window.visualViewport;
+    return {
+      w: vv ? vv.width : window.innerWidth,
+      h: vv ? vv.height : window.innerHeight,
+    };
+  });
+
+  useEffect(() => {
+    const measure = () => {
+      const vv = window.visualViewport;
+      setSize({
+        w: vv ? vv.width : window.innerWidth,
+        h: vv ? vv.height : window.innerHeight,
+      });
+    };
+    window.visualViewport?.addEventListener('resize', measure);
+    window.visualViewport?.addEventListener('scroll', measure);
+    window.addEventListener('resize', measure);
+    return () => {
+      window.visualViewport?.removeEventListener('resize', measure);
+      window.visualViewport?.removeEventListener('scroll', measure);
+      window.removeEventListener('resize', measure);
+    };
+  }, []);
+
+  const petals = useFlowerField(size.w, size.h);
 
   return (
     <motion.div
@@ -103,14 +142,17 @@ export default function FlowerBurst({ onComplete, loadedImages }) {
         <OpenBox />
       </div>
 
-      {/* Canvas burst uses the preloaded image map – no loading delay */}
-      {loadedImages && (
+      {loadedImages ? (
         <CanvasBurst
           petals={petals}
+          width={size.w}
+          height={size.h}
           reduceMotion={reduceMotion}
           loadedImages={loadedImages}
           onComplete={onComplete}
         />
+      ) : (
+        <BurstLoading />
       )}
 
       <motion.div

@@ -111,11 +111,22 @@
   box-sizing: border-box;
   gap: clamp(1rem, 3.5vw, 1.75rem);
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
+  /* proximity, not mandatory: mandatory forces the browser to always
+     animate a correction onto an exact snap point, and mobile WebKit in
+     particular has a long history of that correction animation looking
+     janky/glitchy (especially combined with scroll-snap-stop: always).
+     Proximity still snaps naturally for evenly-sized, closely-packed
+     frames like these — it's just not forced — and it's the smoother
+     choice on touch devices. This is safe now because "active" is
+     detected live from real geometry (see the IntersectionObserver
+     below) rather than assumed from where a forced snap lands. */
+  scroll-snap-type: x proximity;
   padding: 0.5rem clamp(11vw, 20vw, 26vw);
   scrollbar-width: none;
   -ms-overflow-style: none;
   cursor: grab;
+  overscroll-behavior: x contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .filmstrip-track.is-dragging {
@@ -136,12 +147,17 @@
   position: relative;
   flex: 0 0 auto;
   scroll-snap-align: center;
+  scroll-snap-stop: always;
   height: 100%;
   width: auto;
   aspect-ratio: 3 / 4;
   transform: scale(0.88);
   opacity: 0.5;
-  transition: transform 0.35s ease, opacity 0.35s ease;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+  /* Offscreen frames skip layout/paint entirely — only the few near the
+     viewport are actually rendered while scrubbing. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 210px 280px;
 }
 
 /* Hand-arranged scrapbook tilt — every card sits a little loose,
@@ -154,6 +170,12 @@
   opacity: 1;
 }
 
+/* While the user is actively scrolling, drop frame transitions so the
+   compositor doesn't fight touch-momentum animation. */
+.filmstrip-track.is-scrolling .filmstrip-frame {
+  transition: none !important;
+}
+
 .frame-image-wrap {
   position: relative;
   width: 100%;
@@ -161,6 +183,10 @@
   border-radius: 8px;
   overflow: hidden;
   border: 6px solid #FFFFFF;
+  /* Soft watercolor placeholder shown while a frame's photo is still
+     being fetched/decoded — no jarring empty gap while scrubbing. */
+  background:
+    linear-gradient(135deg, rgba(233, 198, 255, 0.55) 0%, rgba(162, 245, 165, 0.35) 100%);
   box-shadow:
     0 0 0 1px rgba(var(--ink-rgb), 0.05),
     var(--shadow-card);

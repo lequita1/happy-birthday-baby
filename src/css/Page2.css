@@ -48,3 +48,32 @@
   pointer-events: none;
   z-index: 10;
 }
+
+/* Loading placeholder while flower images are still being fetched */
+.burst-loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  z-index: 2;
+}
+.burst-loader-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--pop);
+  opacity: 0.7;
+  animation: burst-loader-pulse 1.2s ease-in-out infinite;
+}
+.burst-loader-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.burst-loader-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes burst-loader-pulse {
+  0%, 100% { transform: scale(0.8); opacity: 0.4; }
+  50% { transform: scale(1.2); opacity: 1; }
+}
