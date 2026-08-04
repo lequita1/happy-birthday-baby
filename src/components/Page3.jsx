@@ -16,7 +16,8 @@ import '../css/Page3.css';
 // ─────────────────────────────────────────────────────────────
 
 const MESSAGE =
-  `Happy birthday.`;
+  `Happy birthday, baby ko\n
+  `;
 
 const CHAR_SPEED     = 38;
 const PAUSE_WORD     = 60;
