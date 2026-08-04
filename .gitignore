@@ -12,6 +12,13 @@ dist
 dist-ssr
 *.local
 
+.playwright-mcp
+videos
+verify
+images
+
+codes.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

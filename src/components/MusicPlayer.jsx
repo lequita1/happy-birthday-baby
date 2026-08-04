@@ -63,7 +63,7 @@ function NextIcon() {
   );
 }
 
-export default function MusicPlayer() {
+export default function MusicPlayer({ scene }) {
   const audioRef = useRef(null);
   const indexRef = useRef(0);
   const [open, setOpen] = useState(false);
@@ -72,6 +72,10 @@ export default function MusicPlayer() {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [error, setError] = useState(false);
+
+  // The floating button stays hidden on the title/countdown page,
+  // then fades in at its spot once the first scene opens.
+  const hidden = scene === 'countdown';
 
   const track = musicData[index];
 
@@ -163,7 +167,7 @@ export default function MusicPlayer() {
   return (
     <>
       <AnimatePresence>
-        {open && (
+        {open && !hidden && (
           <motion.div
             key="music-backdrop"
             className="music-backdrop"
@@ -178,7 +182,7 @@ export default function MusicPlayer() {
       <audio ref={audioRef} preload="auto" />
 
       <AnimatePresence>
-        {open && (
+        {open && !hidden && (
           <motion.div
             key="music-panel"
             className="music-panel"
@@ -256,24 +260,33 @@ export default function MusicPlayer() {
         )}
       </AnimatePresence>
 
-      <button
-        type="button"
-        className={`music-fab${playing ? ' is-playing' : ''}`}
-        onClick={() => setOpen((o) => !o)}
-        aria-label={open ? 'Close music player' : 'Open music player'}
-      >
-        <span className="music-fab-icon" aria-hidden="true">
-          {playing ? (
-            <span className="eq eq--fab is-playing">
-              <span />
-              <span />
-              <span />
+      <AnimatePresence>
+        {!hidden && (
+          <motion.button
+            type="button"
+            className={`music-fab${playing ? ' is-playing' : ''}`}
+            onClick={() => setOpen((o) => !o)}
+            aria-label={open ? 'Close music player' : 'Open music player'}
+            initial={{ opacity: 0, scale: 0.9, y: 8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 8 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            whileTap={{ scale: 0.94 }}
+          >
+            <span className="music-fab-icon" aria-hidden="true">
+              {playing ? (
+                <span className="eq eq--fab is-playing">
+                  <span />
+                  <span />
+                  <span />
+                </span>
+              ) : (
+                <MusicNoteIcon />
+              )}
             </span>
-          ) : (
-            <MusicNoteIcon />
-          )}
-        </span>
-      </button>
+          </motion.button>
+        )}
+      </AnimatePresence>
     </>
   );
 }

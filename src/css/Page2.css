@@ -9,14 +9,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Watercolor wash, tuned differently from Page1 so the burst
+     reads as the same page but a new moment */
   background:
-    radial-gradient(
-      ellipse 90% 75% at 50% 18%,
-      var(--lav-light) 0%,
-      var(--lav) 38%,
-      var(--lav-ice) 66%,
-      var(--mint-ice) 100%
-    );
+    radial-gradient(ellipse 70% 90% at 78% 6%,   var(--mint-pale) 0%, transparent 58%),
+    radial-gradient(ellipse 60% 80% at 8% 20%,   var(--lav-light) 0%, transparent 55%),
+    radial-gradient(ellipse 130% 70% at 50% 118%, var(--lav-ice) 0%, transparent 60%),
+    var(--lav);
 }
 
 .burst-box-stage {
@@ -30,8 +29,8 @@
 .open-box-svg {
   width: clamp(140px, 32vw, 210px);
   filter:
-    drop-shadow(0 8px 18px rgba(var(--ink-rgb), 0.18))
-    drop-shadow(0 0 26px rgba(var(--lav-light-rgb), 0.8));
+    drop-shadow(0 10px 20px rgba(var(--ink-rgb), 0.16))
+    drop-shadow(0 16px 32px rgba(var(--pop-rgb), 0.14));
 }
 
 /* Tiny central flash – no full-screen repaint */

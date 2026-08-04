@@ -10,14 +10,12 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  /* Watercolor wash, tuned differently from every other scene */
   background:
-    radial-gradient(
-      ellipse 90% 75% at 50% 18%,
-      var(--lav-light) 0%,
-      var(--lav) 38%,
-      var(--lav-ice) 66%,
-      var(--mint-ice) 100%
-    );
+    radial-gradient(ellipse 120% 60% at 50% 0%, var(--lav-light) 0%, transparent 58%),
+    radial-gradient(ellipse 70% 70% at 90% 78%, var(--mint-pale) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 60% at 6% 66%,  var(--lav) 0%, transparent 55%),
+    var(--lav-ice);
 }
 
 /* ── Atmosphere ──────────────────────────────────── */
@@ -48,41 +46,29 @@
   z-index: 0;
 }
 
+/* Watercolor pools — soft pigment bleeds, not lens streaks */
 .mf {
   position: absolute;
-  border-radius: 999px;
-  filter: blur(5px);
+  border-radius: 60% 40% 55% 45%;
+  filter: blur(26px);
 }
 
 .mf-1 {
-  width: 32vw;
-  height: 8px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.5) 40%,
-    rgba(255, 255, 255, 0.75) 60%,
-    transparent 100%
-  );
-  bottom: 16%;
-  left: -4%;
-  transform: rotate(-34deg);
-  opacity: 0.45;
+  width: 36vw;
+  height: 36vw;
+  background: radial-gradient(circle, rgba(234, 226, 249, 0.75) 0%, rgba(234, 226, 249, 0) 68%);
+  bottom: 8%;
+  left: -8%;
+  opacity: 0.85;
 }
 
 .mf-2 {
-  width: 20vw;
-  height: 7px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(162, 245, 165, 0.5) 50%,
-    transparent 100%
-  );
-  bottom: 20%;
-  left: 10%;
-  transform: rotate(-34deg);
-  opacity: 0.4;
+  width: 30vw;
+  height: 30vw;
+  background: radial-gradient(circle, rgba(162, 245, 165, 0.4) 0%, rgba(162, 245, 165, 0) 68%);
+  bottom: 16%;
+  right: -6%;
+  opacity: 0.8;
 }
 
 /* ── Play prompt ────────────────────────────────────
@@ -167,7 +153,8 @@
   to   { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* Glass icon — a violet-filled disc that pops on light */
+/* Glass icon — the one berry moment on this page: a rose-red
+   disc that pops against the pale paper */
 .play-icon {
   position: relative;
   width: 76px;
@@ -176,20 +163,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(160deg, #6A4E9E 0%, var(--accent) 100%);
+  background: linear-gradient(160deg, #E0408A 0%, var(--pop) 100%);
   border: 1px solid rgba(255, 255, 255, 0.5);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    0 10px 26px rgba(var(--accent-rgb), 0.4),
-    0 0 30px rgba(var(--lav-light-rgb), 0.9);
+    var(--shadow-float);
   transition: box-shadow 0.25s ease;
 }
 
 .play-prompt:hover .play-icon {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    0 12px 30px rgba(var(--accent-rgb), 0.5),
-    0 0 38px rgba(var(--lav-light-rgb), 1);
+    0 28px 52px -14px rgba(var(--pop-rgb), 0.45);
 }
 
 /* Nudge the triangle for optical centering instead of padding */
@@ -200,10 +185,9 @@
 
 .play-hint {
   position: relative;
-  font-family: 'Fraunces', serif;
-  font-style: italic;
-  font-size: 0.85rem;
-  letter-spacing: 0.05em;
+  font-family: var(--script);
+  font-size: 1.3rem;
+  letter-spacing: 0.02em;
   color: var(--ink);
   opacity: 0.8;
 }
@@ -228,9 +212,46 @@
 }
 
 .message-body {
+  position: relative;
   max-width: 560px;
   width: 100%;
   text-align: left;
+  /* Paper card — layered edges + soft tinted lift */
+  padding: clamp(1.7rem, 5vw, 2.6rem);
+  border-radius: 18px;
+  background: linear-gradient(175deg, rgba(255, 255, 255, 0.85), rgba(var(--lav-ice-rgb), 0.65));
+  border: var(--paper-border);
+  box-shadow: var(--shadow-card);
+}
+
+/* Washi tape pins on the letter's top corners */
+.message-body::before,
+.message-body::after {
+  content: '';
+  position: absolute;
+  width: 56px;
+  height: 15px;
+  border-radius: 2px;
+  background: linear-gradient(105deg, rgba(233, 198, 255, 0.6), rgba(234, 249, 233, 0.55));
+  box-shadow: 0 1px 3px rgba(59, 42, 77, 0.12);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.message-body::before {
+  top: -9px;
+  left: -8px;
+  transform: rotate(-45deg);
+}
+
+.message-body::after {
+  top: -9px;
+  right: -8px;
+  transform: rotate(45deg);
+}
+
+.message-body .corner-sprig {
+  z-index: 1;
 }
 
 .typewriter-text {
@@ -292,19 +313,19 @@
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: lowercase;
-  color: #F4EEFF;
-  background: var(--accent);
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #FFFFFF;
+  background: linear-gradient(160deg, #E0408A, var(--pop));
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 999px;
   padding: 0.65rem 2.4rem;
   cursor: pointer;
-  box-shadow: 0 8px 22px rgba(var(--accent-rgb), 0.35);
+  box-shadow: var(--shadow-btn);
   transition: box-shadow 0.2s ease, transform 0.2s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
 .continue-btn:hover {
-  box-shadow: 0 10px 28px rgba(var(--accent-rgb), 0.5);
+  box-shadow: 0 12px 30px -6px rgba(var(--pop-rgb), 0.55);
 }
 
 .continue-btn:focus-visible {

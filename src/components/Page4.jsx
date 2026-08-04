@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useReducedMotion } from '../useMotionPreference';
 import { timelineData } from '../timelineData';
 import { Nebula, Aurora } from './Ambient';
+import Sprig from './Sprig';
 import '../css/Page4.css';
 
 // ─────────────────────────────────────────────────────────────
@@ -147,6 +148,8 @@ function useWheelToHorizontal(ref) {
 function Frame({ entry, isActive }) {
   return (
     <div className={`filmstrip-frame${isActive ? ' is-active' : ''}`}>
+      <span className="washi-tape washi-tape--tl" aria-hidden="true" />
+      <span className="corner-sprig corner-sprig--br" aria-hidden="true" />
       <div className="frame-image-wrap">
         <img src={entry.image} alt={entry.age} className="frame-image" loading="lazy" />
         <span className="frame-timestamp">{entry.age}</span>
@@ -379,6 +382,8 @@ export default function Timeline({ onNext }) {
           )}
         </AnimatePresence>
       </div>
+
+      <Sprig className="filmstrip-sprig" />
 
       <div className="scrub-rail" aria-hidden="true">
         <div className="scrub-rail-track">

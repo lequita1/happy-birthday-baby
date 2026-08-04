@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useReducedMotion } from '../useMotionPreference';
 import { wishesData } from '../wishesData';
 import { Nebula, Aurora } from './Ambient';
+import Sprig from './Sprig';
 import '../css/Page7.css';
 
 // ─────────────────────────────────────────────────────────────
@@ -57,6 +58,8 @@ export default function WishesScene({ onNext }) {
       </div>
 
       <h2 className="wishes-heading">{HEADING_TEXT}</h2>
+
+      <Sprig className="wishes-sprig" />
 
       <div className="wishes-list">
         {visible.map((wish, i) => (

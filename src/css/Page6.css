@@ -12,14 +12,12 @@
   justify-content: center;
   padding: clamp(3rem, 8vw, 5rem) 1.5rem clamp(6rem, 15vw, 8rem);
   overflow: hidden;
+  /* Watercolor wash, tuned differently from every other scene */
   background:
-    radial-gradient(
-      ellipse 90% 75% at 50% 18%,
-      var(--lav-light) 0%,
-      var(--lav) 38%,
-      var(--lav-ice) 66%,
-      var(--mint-ice) 100%
-    );
+    radial-gradient(ellipse 110% 55% at 50% 0%, var(--lav-light) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 60% at 8% 80%,  var(--lav) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 60% at 92% 88%, var(--mint-pale) 0%, transparent 56%),
+    var(--lav-ice);
 }
 
 .video-glow {
@@ -49,40 +47,29 @@
   z-index: 0;
 }
 
+/* Watercolor pools — soft pigment bleeds, not lens streaks */
 .vf {
   position: absolute;
-  height: 8px;
-  border-radius: 999px;
-  filter: blur(5px);
+  border-radius: 60% 40% 55% 45%;
+  filter: blur(26px);
 }
 
 .vf-1 {
-  width: 40vw;
-  top: 12%;
-  right: -4%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.55) 45%,
-    rgba(233, 198, 255, 0.6) 65%,
-    transparent 100%
-  );
-  transform: rotate(-30deg);
-  opacity: 0.45;
+  width: 42vw;
+  height: 42vw;
+  background: radial-gradient(circle, rgba(233, 198, 255, 0.5) 0%, rgba(233, 198, 255, 0) 68%);
+  top: 4%;
+  right: -10%;
+  opacity: 0.8;
 }
 
 .vf-2 {
-  width: 26vw;
-  bottom: 18%;
-  left: -4%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(162, 245, 165, 0.5) 50%,
-    transparent 100%
-  );
-  transform: rotate(-30deg);
-  opacity: 0.4;
+  width: 30vw;
+  height: 30vw;
+  background: radial-gradient(circle, rgba(162, 245, 165, 0.42) 0%, rgba(162, 245, 165, 0) 68%);
+  bottom: 8%;
+  left: -6%;
+  opacity: 0.8;
 }
 
 .video-heading-block {
@@ -124,6 +111,17 @@
   color: var(--ink);
   text-align: center;
   margin: 0;
+}
+
+/* Hand-sewn dashed underline — the paper-craft stitch */
+.video-heading::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -0.55rem;
+  transform: translateX(-50%);
+  width: 34%;
+  border-bottom: 2px dashed rgba(var(--accent-rgb), 0.4);
 }
 
 /* ── Player frame (film premiere) ────────────────── */
@@ -217,45 +215,46 @@
   display: block;
 }
 
-/* Glowing corner brackets — violet to stay visible on light */
+/* Glowing corner brackets — berry so they read as the focused,
+   signature moment of the page */
 .video-corner {
   position: absolute;
   z-index: 3;
   width: 20px;
   height: 20px;
   pointer-events: none;
-  filter: drop-shadow(0 0 6px rgba(var(--accent-rgb), 0.7));
+  filter: drop-shadow(0 0 6px rgba(var(--pop-rgb), 0.7));
 }
 
 .video-corner--tl {
   top: -8px;
   left: -8px;
-  border-top: 2px solid var(--accent);
-  border-left: 2px solid var(--accent);
+  border-top: 2px solid var(--pop);
+  border-left: 2px solid var(--pop);
   border-top-left-radius: 6px;
 }
 
 .video-corner--tr {
   top: -8px;
   right: -8px;
-  border-top: 2px solid var(--accent);
-  border-right: 2px solid var(--accent);
+  border-top: 2px solid var(--pop);
+  border-right: 2px solid var(--pop);
   border-top-right-radius: 6px;
 }
 
 .video-corner--bl {
   bottom: -8px;
   left: -8px;
-  border-bottom: 2px solid var(--accent);
-  border-left: 2px solid var(--accent);
+  border-bottom: 2px solid var(--pop);
+  border-left: 2px solid var(--pop);
   border-bottom-left-radius: 6px;
 }
 
 .video-corner--br {
   bottom: -8px;
   right: -8px;
-  border-bottom: 2px solid var(--accent);
-  border-right: 2px solid var(--accent);
+  border-bottom: 2px solid var(--pop);
+  border-right: 2px solid var(--pop);
   border-bottom-right-radius: 6px;
 }
 
@@ -451,19 +450,19 @@
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: lowercase;
-  color: #F4EEFF;
-  background: var(--accent);
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #FFFFFF;
+  background: linear-gradient(160deg, #E0408A, var(--pop));
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 999px;
   padding: 0.65rem 2.4rem;
   cursor: pointer;
-  box-shadow: 0 8px 22px rgba(var(--accent-rgb), 0.35);
+  box-shadow: var(--shadow-btn);
   transition: box-shadow 0.2s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
 .video-continue-btn:hover {
-  box-shadow: 0 10px 28px rgba(var(--accent-rgb), 0.5);
+  box-shadow: 0 12px 30px -6px rgba(var(--pop-rgb), 0.55);
 }
 
 .video-continue-btn:focus-visible {

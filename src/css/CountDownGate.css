@@ -47,7 +47,7 @@
   font-optical-sizing: auto;
   font-weight: 500;
   font-size: clamp(2.5rem, 9vw, 4.5rem);
-  color: var(--ink);
+  color: var(--pop);
   line-height: 1;
 }
 
@@ -59,11 +59,12 @@
   color: rgba(var(--ink-rgb), 0.6);
 }
 
+/* The teaser line — handwritten, with a gentle breathing glow */
 .countdown-hint {
-  font-family: 'Fraunces', serif;
-  font-style: italic;
-  font-size: 1.5rem;
-  letter-spacing: 0.04em;
-  color: var(--accent);
+  position: relative;
+  font-family: var(--script);
+  font-size: 1.7rem;
+  letter-spacing: 0.02em;
+  color: var(--ink);
   animation: glow-breathe 3.4s ease-in-out infinite;
 }

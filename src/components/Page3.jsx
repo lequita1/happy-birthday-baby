@@ -16,10 +16,24 @@ import '../css/Page3.css';
 // ─────────────────────────────────────────────────────────────
 
 const MESSAGE =
-  `Happy birthday, baby ko\n
+  `Happy birthday, baby ko <33
+  Bilis ng panahon no? habang nagkakalkal ako ng pictures mo super small mo lang mga ganto 🤌 hehe
+  I hope you know how special ikaw syempre di lang sakin, pero sa lahat din ng swerteng tao na kasama mo sa life mo.
+  Ngayon I see someone na sobrang matured, responsible, cute, maganda, kahit may problema nakakakita pa rin ng way malagpasan, laging stuffed bibig, maganda mag smile, caring, may dreams, thoughtful, and may heart na super pure kaya unique ikaw hehe.
+  ANDDDDDDD I want you to know that I am so so proud of you.
+  Not just because of the things na natapos mo, but because of the person na ikaw ngayon after ng lahat ng pinagdaanan mo. I am so proud of you kahit baby litol steps pa yan o kahit walang nakakapansin. I am so proud of you na you kept on going pa rin kahit pagod ka. I am so proud of you for trying, growing, and for becoming more of yourself pa every year.
+  I hope na ngayong 21 ka na sana life mo mabigyan ka pa rin ng maraming reason para mag smile, tumawa at maging masaya. 
+  I hope na you get to experience yung kind of happiness na hindi nifforcee. I hope na maachieve mo lahat ng mga gusto mo, pangarap mo at pinaghihirapan mo. I hope na patuloy mo pa rin habulin lahat ng mga gusto mo kahit na mukang mahirap. I hope na magkaroon ka pa ng maraming memorable moments na masaya ikaw and more days pa na pwede mo masabi sa sarili mo na, "I am proud of myself".
+  And when life doesn't go sa way na gusto mo, sana maalala mo na pwedeng magkamali baby
+  Sobrang grateful ako kasi sa lahat ng mamemeet ko sa sobrang daming possibilities eh ikaw ang nameet ko. Ikaw ang kasama ko sa pag build ng future, at di lang kita nakilala sa happy na ikaw, pagod, emotional, tahimik, lahat ng side mo na di nakikita ng iba.
+  May misunderstandings, nagkakamali ako, moments na nadadala tayo ng emotion natin at di madali para satin. Pero kahit na ganon, mas grateful pa rin ako kasi mas nakilala kita.
+  I am grateful na I get to witness you grow, maging part ng journey mo, na nanjan ako sa happy at sad moments mo, at I get to laugh with you kahit sa maliit na bagay at masabihan kang maganda palagi hehe.
+  Andaming stress recently baby at alam kong pagod na pagod ka.. So please allow yourself na magcelebrate ngayon. Be proud na anlayo na ng narating mo. Tas don't be too hard on yourself din by, di naman lahat alam mo rin po agad. Marami pa ikaw pag dadaanan, memories na magagawa, lugar na makkita at mapupuntahan, dreams to chase pa, at ibang version mo pa na makkita. I hope na kahit papaano, you can feel na I am proud of you and I love you so much baby ko <33
+  Thank you for letting me be part of your life baby. I hope you never forget na nandito ako lagi to cheer for you, believe in you and support you. Sana sa pag next next next mo here sa website matuwa ka at maisip mo lahat ng sinabi ko rito. HAAPPPYYY HAPPPPYYYYYYY BIRTHDAYYYYYYY BABYYYYYY. U DESSERVVEE TO BE CELEBRATED DI LANG TODAY PERO ARAW ARAWWWWW.
+  MAHAAAAAAALLL NA MAHAAAALL NA MAHAAAL KITAAA ILOVEYOUU BYYY HAPPYYY 21ST MWAAAAHHHH 
   `;
 
-const CHAR_SPEED     = 38;
+const CHAR_SPEED     = 10;
 const PAUSE_WORD     = 60;
 const PAUSE_CLAUSE   = 260;
 const PAUSE_SENTENCE = 620;
@@ -205,6 +219,7 @@ export default function MessageScene({ onNext }) {
             transition={{ duration: 0.6 }}
           >
             <div className="message-body">
+              <span className="corner-sprig corner-sprig--br" aria-hidden="true" />
               <p className="typewriter-text">
                 {renderText()}
                 <Cursor visible={!done} />

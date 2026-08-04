@@ -12,14 +12,12 @@
   justify-content: center;
   padding: clamp(3rem, 8vw, 5rem) 1.5rem clamp(6rem, 15vw, 8rem);
   overflow: hidden;
+  /* Watercolor wash, tuned differently from every other scene */
   background:
-    radial-gradient(
-      ellipse 90% 75% at 50% 18%,
-      var(--lav-light) 0%,
-      var(--lav) 38%,
-      var(--lav-ice) 66%,
-      var(--mint-ice) 100%
-    );
+    radial-gradient(ellipse 90% 55% at 88% 10%,  var(--lav-light) 0%, transparent 56%),
+    radial-gradient(ellipse 75% 70% at 10% 72%,  var(--mint-pale) 0%, transparent 55%),
+    radial-gradient(ellipse 110% 55% at 50% 112%, var(--lav-ice) 0%, transparent 58%),
+    var(--lav);
 }
 
 .wishes-glow {
@@ -49,41 +47,30 @@
   z-index: 0;
 }
 
+/* Watercolor pools — soft pigment bleeds, not lens streaks */
 .wf {
   position: absolute;
-  height: 8px;
-  border-radius: 999px;
-  filter: blur(5px);
+  border-radius: 60% 40% 55% 45%;
+  filter: blur(26px);
 }
 
 .wf-1 {
-  width: 40vw;
-  top: 14%;
-  right: -4%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.55) 45%,
-    rgba(233, 198, 255, 0.6) 65%,
-    transparent 100%
-  );
-  transform: rotate(-30deg);
-  opacity: 0.45;
+  width: 42vw;
+  height: 42vw;
+  background: radial-gradient(circle, rgba(233, 198, 255, 0.5) 0%, rgba(233, 198, 255, 0) 68%);
+  top: 4%;
+  right: -10%;
+  opacity: 0.8;
   animation: flare-shimmer 6s ease-in-out infinite;
 }
 
 .wf-2 {
-  width: 26vw;
-  bottom: 20%;
-  left: -4%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(162, 245, 165, 0.5) 50%,
-    transparent 100%
-  );
-  transform: rotate(-30deg);
-  opacity: 0.4;
+  width: 30vw;
+  height: 30vw;
+  background: radial-gradient(circle, rgba(162, 245, 165, 0.42) 0%, rgba(162, 245, 165, 0) 68%);
+  bottom: 8%;
+  left: -6%;
+  opacity: 0.8;
   animation: flare-shimmer 8.5s ease-in-out infinite;
 }
 
@@ -97,6 +84,27 @@
   color: var(--ink);
   text-align: center;
   margin: 0 0 clamp(1.5rem, 5vw, 2.5rem);
+}
+
+/* Hand-sewn dashed underline — the paper-craft stitch */
+.wishes-heading::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -0.55rem;
+  transform: translateX(-50%);
+  width: 34%;
+  border-bottom: 2px dashed rgba(var(--accent-rgb), 0.4);
+}
+
+/* Botanical divider beneath the heading */
+.wishes-sprig {
+  position: relative;
+  z-index: 1;
+  width: clamp(88px, 20vw, 130px);
+  height: auto;
+  margin-top: -0.6rem;
+  margin-bottom: 0.4rem;
 }
 
 .wishes-list {
@@ -157,19 +165,19 @@
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: lowercase;
-  color: #F4EEFF;
-  background: var(--accent);
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #FFFFFF;
+  background: linear-gradient(160deg, #E0408A, var(--pop));
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 999px;
   padding: 0.65rem 2.4rem;
   cursor: pointer;
-  box-shadow: 0 8px 22px rgba(var(--accent-rgb), 0.35);
+  box-shadow: var(--shadow-btn);
   transition: box-shadow 0.2s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
 .wishes-continue-btn:hover {
-  box-shadow: 0 10px 28px rgba(var(--accent-rgb), 0.5);
+  box-shadow: 0 12px 30px -6px rgba(var(--pop-rgb), 0.55);
 }
 
 .wishes-continue-btn:focus-visible {

@@ -1,10 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap');
+
 /* ─────────────────────────────────────────────────────
    Global base — scene styles live in src/css per page.
 
-   Design language: "first light through the garden".
-   A pale lavender→mint morning world. All surface/text
-   colors come from the token set below; scenes layer
-   their own gradients on top of the light page base.
+   Design language: a pressed-flower scrapbook held open in
+   the morning garden. A pale lavender→mint paper world with
+   one berry-red pressed rose for punctuation. All surface/
+   text colors come from the token set below; scenes layer
+   their own watercolor washes on top of the light base.
 
    The document is locked to the viewport (app-style):
    the page itself never scrolls or pans — every scene
@@ -23,11 +26,33 @@
 
   /* ── Derived support tokens ─────────────────────── */
   --ink:       #3B2A4D;   /* deep aubergine-plum — all text (8.6:1 vs bgs) */
-  --accent:    #5B3D8F;   /* deep lavender-violet — links/focus/hints/buttons (5.6:1) */
+  --accent:    #5B3D8F;   /* deep lavender-violet — secondary links/focus/hints (5.6:1) */
+
+  /* ── The one saturated "pop" accent — pressed rose ──
+     Primary buttons, key numerals, active states, and one
+     signature moment per scene. Everything else stays pastel
+     so the single berry mark always lands. (#C2185B on the
+     paper whites ≈ 5.9:1, WCAG AA for normal text.)          */
+  --pop:       #C2185B;
+  --pop-deep:  #8E1042;   /* deeper berry — gradient end for filled controls */
+
+  /* ── Scrapbook craft tokens ─────────────────────── */
+  --script:       'Caveat', 'Fraunces', cursive;           /* handwritten flourishes */
+  --paper-border: 1px solid rgba(59, 42, 77, 0.08);        /* deeper-than-white hairline */
+  --shadow-card:  0 14px 30px -10px rgba(194, 24, 91, 0.18),
+                  0 6px 18px -4px rgba(59, 42, 77, 0.08);
+  --shadow-float: 0 24px 46px -14px rgba(194, 24, 91, 0.3),
+                  0 10px 24px -6px rgba(59, 42, 77, 0.12);
+  --shadow-btn:   0 8px 22px -6px rgba(194, 24, 91, 0.42);
+
+  /* Botanical corner linework — thin stroke, no fill, palette
+     violet at low opacity. Reused across scenes as card corners. */
+  --corner-sprig: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none'%3E%3Cpath d='M3 45 C 8 30, 18 18, 45 3' stroke='%235B3D8F' stroke-width='1.3' stroke-linecap='round'/%3E%3Cpath d='M10 34 C 7 27, 11 21, 17 19 C 20 26, 16 34, 10 34 Z' stroke='%235B3D8F' stroke-width='1'/%3E%3Cpath d='M19 23 C 17 17, 21 12, 27 11 C 29 17, 25 23, 19 23 Z' stroke='%235B3D8F' stroke-width='1'/%3E%3Cpath d='M29 12 C 27 7, 31 4, 36 3 C 38 9, 34 13, 29 12 Z' stroke='%235B3D8F' stroke-width='1'/%3E%3Cpath d='M5 41 C 6 38, 9 36, 12 37 C 11 40, 8 42, 5 41 Z' stroke='%235B3D8F' stroke-width='1'/%3E%3C/svg%3E");
 
   /* ── Shared rgb() triplets for alpha composition ── */
   --ink-rgb:        59, 42, 77;
   --accent-rgb:     91, 61, 143;
+  --pop-rgb:        194, 24, 91;
   --lav-light-rgb:  233, 198, 255;
   --lav-rgb:        229, 212, 249;
   --lav-ice-rgb:    234, 226, 249;
@@ -77,6 +102,103 @@ body {
 button {
   touch-action: manipulation;
 }
+
+/* ─────────────────────────────────────────────────────
+   Scrapbook craft layers — shared across every scene.
+   ───────────────────────────────────────────────────── */
+
+/* Paper grain over the whole app: a fixed feTurbulence noise
+   texture at ~3.5% multiply. Mounted ONCE from App.jsx so it
+   can't be removed/re-added between scenes. Sits above all
+   scenes (z-999) but can't be hovered or focused. */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* Soft inner paper vignette — insets every scene into the page
+   so surfaces read as paper rather than screen. Applied to every
+   scene root; content layers (z-index 1+) sit above it. */
+.galactic-scene::after,
+.burst-scene::after,
+.message-scene::after,
+.filmstrip-scene::after,
+.stack-scene::after,
+.video-scene::after,
+.wishes-scene::after,
+.final-scene::after,
+.countdown-gate::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 62%,
+    rgba(59, 42, 77, 0.05) 100%
+  );
+}
+
+/* Handwritten sprig divider — thin botanical linework, no fill,
+   palette violet at low opacity. Sized in the pages that use it. */
+.sprig {
+  display: block;
+  margin: 0 auto;
+  color: var(--accent);
+  opacity: 0.5;
+}
+
+/* Washi-tape corner — a translucent pastel strip, frayed by the
+   dashed weave, pinned over a polaroid corner. Drop into a corner
+   helper below per element (z-index above the photo). */
+.washi-tape {
+  position: absolute;
+  width: 56px;
+  height: 15px;
+  border-radius: 2px;
+  background: linear-gradient(105deg, rgba(233, 198, 255, 0.6), rgba(234, 249, 233, 0.55));
+  box-shadow: 0 1px 3px rgba(59, 42, 77, 0.12);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+}
+
+.washi-tape::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.55) 0 5px, transparent 5px 11px);
+  opacity: 0.4;
+}
+
+/* Corner pins for the tape — rotate to hug each card corner */
+.washi-tape--tl { top: -7px; left: -7px; transform: rotate(-45deg); }
+.washi-tape--tr { top: -7px; right: -7px; transform: rotate(45deg); }
+.washi-tape--bl { bottom: -7px; left: -7px; transform: rotate(45deg); }
+.washi-tape--br { bottom: -7px; right: -7px; transform: rotate(-45deg); }
+
+/* Botanical corner ornament — thin linework painted on the
+   paper at a card corner. Place inside a positioned card. */
+.corner-sprig {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  background: var(--corner-sprig) no-repeat center / 44px 44px;
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.corner-sprig--br { bottom: 6px; right: 6px; transform: rotate(180deg); }
+.corner-sprig--tr { top: 6px; right: 6px; transform: rotate(90deg); }
+.corner-sprig--bl { bottom: 6px; left: 6px; transform: rotate(-90deg); }
 
 /* ─────────────────────────────────────────────────────
    Shared ambient animation keyframes — slow, subtle, and

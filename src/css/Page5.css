@@ -17,14 +17,12 @@
     1.5rem
     calc(clamp(4.5rem, 12vw, 6.5rem) + env(safe-area-inset-bottom, 0px));
   overflow: hidden;
+  /* Watercolor wash, tuned differently from every other scene */
   background:
-    radial-gradient(
-      ellipse 90% 75% at 50% 0%,
-      var(--lav-light) 0%,
-      var(--lav) 40%,
-      var(--lav-ice) 68%,
-      var(--mint-ice) 100%
-    );
+    radial-gradient(ellipse 80% 55% at 12% 12%,  var(--lav) 0%, transparent 55%),
+    radial-gradient(ellipse 100% 70% at 50% 105%, var(--mint-pale) 0%, transparent 58%),
+    radial-gradient(ellipse 60% 50% at 92% 30%,  var(--lav-ice) 0%, transparent 55%),
+    var(--mint-ice);
 }
 
 /* Ambient pastel glow behind the stack */
@@ -55,40 +53,30 @@
   z-index: 0;
 }
 
+/* Watercolor pools — soft pigment bleeds, not lens streaks */
 .sf {
   position: absolute;
-  height: 8px;
-  border-radius: 999px;
-  filter: blur(5px);
+  border-radius: 60% 40% 55% 45%;
+  filter: blur(26px);
 }
 
 .sf-1 {
-  width: 40vw;
-  top: 10%;
-  left: -6%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.6) 50%,
-    transparent 100%
-  );
-  transform: rotate(24deg);
-  opacity: 0.45;
+  width: 38vw;
+  height: 38vw;
+  background: radial-gradient(circle, rgba(233, 198, 255, 0.5) 0%, rgba(233, 198, 255, 0) 68%);
+  top: 4%;
+  left: -8%;
+  opacity: 0.8;
   animation: flare-shimmer 6.5s ease-in-out infinite;
 }
 
 .sf-2 {
   width: 30vw;
-  bottom: 16%;
-  right: -4%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(162, 245, 165, 0.5) 50%,
-    transparent 100%
-  );
-  transform: rotate(24deg);
-  opacity: 0.4;
+  height: 30vw;
+  background: radial-gradient(circle, rgba(162, 245, 165, 0.42) 0%, rgba(162, 245, 165, 0) 68%);
+  bottom: 10%;
+  right: -6%;
+  opacity: 0.8;
   animation: flare-shimmer 9s ease-in-out infinite;
 }
 
@@ -102,6 +90,17 @@
   color: var(--ink);
   text-align: center;
   margin: 0;
+}
+
+/* Hand-sewn dashed underline — the paper-craft stitch */
+.stack-heading::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -0.55rem;
+  transform: translateX(-50%);
+  width: 34%;
+  border-bottom: 2px dashed rgba(var(--accent-rgb), 0.4);
 }
 
 .stack-hint {
@@ -162,6 +161,33 @@
   }
 }
 
+/* Washi tape pins on the stack corners — the scrapbook keeps
+   the photo pile together. They sit above the top card. */
+.stack-wrap::before,
+.stack-wrap::after {
+  content: '';
+  position: absolute;
+  z-index: 6;
+  width: 56px;
+  height: 15px;
+  border-radius: 2px;
+  background: linear-gradient(105deg, rgba(233, 198, 255, 0.6), rgba(234, 249, 233, 0.55));
+  box-shadow: 0 1px 3px rgba(59, 42, 77, 0.12);
+  pointer-events: none;
+}
+
+.stack-wrap::before {
+  top: -9px;
+  left: -9px;
+  transform: rotate(-45deg);
+}
+
+.stack-wrap::after {
+  top: -9px;
+  right: -9px;
+  transform: rotate(45deg);
+}
+
 .stack-card {
   position: absolute;
   inset: 0;
@@ -169,7 +195,9 @@
   overflow: hidden;
   background: var(--lav-ice);
   border: 5px solid #FFFFFF;
-  box-shadow: 0 16px 36px rgba(var(--ink-rgb), 0.22);
+  box-shadow:
+    0 0 0 1px rgba(var(--ink-rgb), 0.05),
+    var(--shadow-card);
 }
 
 .stack-card--top {
@@ -320,7 +348,7 @@
 }
 
 .stack-dot.is-active {
-  background: var(--accent);
+  background: var(--pop);
   transform: scale(1.4);
 }
 
@@ -346,7 +374,7 @@
 
 .stack-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--mint));
+  background: linear-gradient(90deg, var(--pop), var(--mint));
   border-radius: 999px;
 }
 
@@ -493,19 +521,19 @@
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: lowercase;
-  color: #F4EEFF;
-  background: var(--accent);
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #FFFFFF;
+  background: linear-gradient(160deg, #E0408A, var(--pop));
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 999px;
   padding: 0.65rem 2.4rem;
   cursor: pointer;
-  box-shadow: 0 8px 22px rgba(var(--accent-rgb), 0.35);
+  box-shadow: var(--shadow-btn);
   transition: box-shadow 0.2s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
 .stack-continue-btn:hover {
-  box-shadow: 0 10px 28px rgba(var(--accent-rgb), 0.5);
+  box-shadow: 0 12px 30px -6px rgba(var(--pop-rgb), 0.55);
 }
 
 .stack-continue-btn:focus-visible {

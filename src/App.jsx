@@ -100,7 +100,8 @@ export default function App() {
         />
       )}
       </AnimatePresence>
-      <MusicPlayer />
+      <div className="grain-overlay" aria-hidden="true" />
+      <MusicPlayer scene={scene} />
     </>
   );
 }

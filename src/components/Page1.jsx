@@ -98,7 +98,7 @@ function GiftBox({ onOpen, reduceMotion }) {
       >
         <rect x="32" y="76" width="136" height="82" rx="10" fill="var(--lav-ice)" />
         <rect x="32" y="76" width="136" height="82" rx="10" fill="url(#boxShade)" />
-        <rect x="90" y="76" width="20" height="82" fill="var(--mint)" />
+        <rect x="90" y="76" width="20" height="82" fill="var(--pop)" />
         
         <motion.ellipse
           cx="100"
@@ -118,14 +118,14 @@ function GiftBox({ onOpen, reduceMotion }) {
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
           <rect x="20" y="46" width="160" height="34" rx="9" fill="var(--lav)" />
-          <rect x="90" y="46" width="20" height="34" fill="var(--mint)" />
+          <rect x="90" y="46" width="20" height="34" fill="var(--pop)" />
           <path
             d="M100 46 C 78 30, 55 34, 62 52 C 68 62, 90 54, 100 46 Z"
-            fill="var(--mint-ice)"
+            fill="var(--pop)"
           />
           <path
             d="M100 46 C 122 30, 145 34, 138 52 C 132 62, 110 54, 100 46 Z"
-            fill="var(--mint-ice)"
+            fill="var(--pop)"
           />
           <circle cx="100" cy="47" r="7" fill="#FFFFFF" />
           <rect x="20" y="46" width="160" height="8" rx="9" fill="url(#lidHighlight)" opacity="0.3" />
@@ -198,8 +198,8 @@ export default function GalacticReveal({ onOpen }) {
         ))}
         {!reduceMotion && (
           <>
-            <span className="shooting-star" aria-hidden="true" />
-            <span className="shooting-star shooting-star--late" aria-hidden="true" />
+            <span className="falling-petal" aria-hidden="true" />
+            <span className="falling-petal falling-petal--late" aria-hidden="true" />
           </>
         )}
       </div>

@@ -11,17 +11,16 @@
   flex-direction: column;
   padding: clamp(3rem, 8vw, 5rem) 0 6rem;
   overflow: hidden;
+  /* Watercolor wash, tuned differently from every other scene */
   background:
-    radial-gradient(
-      ellipse 90% 75% at 50% 0%,
-      var(--lav-light) 0%,
-      var(--lav) 40%,
-      var(--lav-ice) 68%,
-      var(--mint-ice) 100%
-    );
+    radial-gradient(ellipse 100% 60% at 50% 0%,   var(--lav-light) 0%, transparent 58%),
+    radial-gradient(ellipse 70% 80% at 88% 55%,   var(--mint-pale) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 60% at 50% 100%,  var(--lav-ice) 0%, transparent 60%),
+    var(--lav);
 }
 
-/* Soft morning-light accents */
+/* Soft watercolor pools — the old diagonal light streaks
+   become organic patches of pigment soaked into the paper */
 .filmstrip-flares {
   position: absolute;
   inset: 0;
@@ -32,39 +31,27 @@
 
 .ff {
   position: absolute;
-  height: 8px;
-  border-radius: 999px;
-  filter: blur(5px);
+  border-radius: 60% 40% 55% 45%;
+  filter: blur(26px);
 }
 
 .ff-1 {
-  width: 46vw;
-  top: 14%;
-  right: -6%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.55) 45%,
-    rgba(233, 198, 255, 0.6) 65%,
-    transparent 100%
-  );
-  transform: rotate(-30deg);
-  opacity: 0.45;
+  width: 44vw;
+  height: 44vw;
+  background: radial-gradient(circle, rgba(233, 198, 255, 0.5) 0%, rgba(233, 198, 255, 0) 68%);
+  top: 4%;
+  right: -10%;
+  opacity: 0.8;
   animation: flare-shimmer 6s ease-in-out infinite;
 }
 
 .ff-2 {
-  width: 28vw;
-  bottom: 22%;
-  left: -4%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(162, 245, 165, 0.5) 50%,
-    transparent 100%
-  );
-  transform: rotate(-30deg);
-  opacity: 0.4;
+  width: 34vw;
+  height: 34vw;
+  background: radial-gradient(circle, rgba(162, 245, 165, 0.45) 0%, rgba(162, 245, 165, 0) 68%);
+  bottom: 10%;
+  left: -8%;
+  opacity: 0.8;
   animation: flare-shimmer 8.5s ease-in-out infinite;
 }
 
@@ -81,6 +68,17 @@
   padding: 0 1.5rem;
 }
 
+/* Hand-sewn dashed underline — the paper-craft stitch */
+.filmstrip-heading::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -0.6rem;
+  transform: translateX(-50%);
+  width: 36%;
+  border-bottom: 2px dashed rgba(var(--accent-rgb), 0.4);
+}
+
 .filmstrip-hint {
   position: relative;
   z-index: 1;
@@ -92,6 +90,7 @@
   text-transform: uppercase;
   color: var(--accent);
   opacity: 0.9;
+  margin-top: 0.9rem;
   margin-bottom: clamp(1.5rem, 5vw, 2.5rem);
 }
 
@@ -134,6 +133,7 @@
 }
 
 .filmstrip-frame {
+  position: relative;
   flex: 0 0 auto;
   scroll-snap-align: center;
   height: 100%;
@@ -144,8 +144,13 @@
   transition: transform 0.35s ease, opacity 0.35s ease;
 }
 
+/* Hand-arranged scrapbook tilt — every card sits a little loose,
+   alternating so the track never reads as machine-perfect */
+.filmstrip-frame:nth-child(even) { transform: scale(0.88) rotate(-1.2deg); }
+.filmstrip-frame:nth-child(odd)  { transform: scale(0.88) rotate(1deg); }
+
 .filmstrip-frame.is-active {
-  transform: scale(1);
+  transform: scale(1) rotate(0.4deg);
   opacity: 1;
 }
 
@@ -157,8 +162,15 @@
   overflow: hidden;
   border: 6px solid #FFFFFF;
   box-shadow:
-    0 14px 30px rgba(var(--ink-rgb), 0.22),
-    0 2px 8px rgba(var(--ink-rgb), 0.1);
+    0 0 0 1px rgba(var(--ink-rgb), 0.05),
+    var(--shadow-card);
+  transition: box-shadow 0.35s ease;
+}
+
+.filmstrip-frame.is-active .frame-image-wrap {
+  box-shadow:
+    0 0 0 1px rgba(var(--ink-rgb), 0.05),
+    var(--shadow-float);
 }
 
 .frame-image {
@@ -170,20 +182,20 @@
   pointer-events: none;
 }
 
-/* Burned-in timestamp, like a video overlay — dark chip
-   sits on the photo itself, so it stays readable */
+/* Burned-in timestamp — hand-written in Caveat, like a date
+   scrawled in the corner of the print. Dark chip keeps it
+   readable over any photo. */
 .frame-timestamp {
   position: absolute;
   bottom: 10px;
   left: 10px;
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 0.68rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-family: var(--script);
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
   color: #FFFFFF;
   background: rgba(59, 42, 77, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.25);
-  padding: 0.25rem 0.6rem;
+  padding: 0.1rem 0.6rem;
   border-radius: 999px;
   backdrop-filter: blur(3px);
 }
@@ -208,12 +220,22 @@
   box-shadow: 0 6px 16px rgba(var(--ink-rgb), 0.12);
   -webkit-tap-highlight-color: transparent;
   display: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .filmstrip-nav {
     display: block;
   }
+  .filmstrip-nav:hover {
+    transform: translateY(-50%) translateY(-2px);
+    box-shadow: 0 10px 22px rgba(var(--ink-rgb), 0.16);
+  }
+}
+
+/* Tape + corner linework sit above the photo inside the frame */
+.filmstrip-frame .washi-tape {
+  z-index: 5;
 }
 
 .filmstrip-nav--left {
@@ -335,7 +357,7 @@
   position: relative;
   z-index: 1;
   max-width: min(420px, 70vw);
-  margin: clamp(2rem, 6vw, 3rem) auto 0;
+  margin: clamp(0.75rem, 2.5vw, 1.25rem) auto 0;
 }
 
 .scrub-rail-track {
@@ -356,10 +378,19 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.18), 0 0 14px 2px rgba(var(--lav-light-rgb), 0.95);
+  background: var(--pop);
+  box-shadow: 0 0 0 4px rgba(var(--pop-rgb), 0.18), 0 0 14px 2px rgba(var(--pop-rgb), 0.4);
   transform: translate(-50%, -50%);
   transition: left 0.12s linear;
+}
+
+/* Botanical divider sitting between the caption and the rail */
+.filmstrip-sprig {
+  position: relative;
+  z-index: 1;
+  width: clamp(84px, 20vw, 124px);
+  height: auto;
+  margin-top: clamp(0.9rem, 2.5vw, 1.25rem);
 }
 
 /* ── Continue button ─────────────────────────────── */
@@ -397,19 +428,19 @@
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: lowercase;
-  color: #F4EEFF;
-  background: var(--accent);
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #FFFFFF;
+  background: linear-gradient(160deg, #E0408A, var(--pop));
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 999px;
   padding: 0.65rem 2.4rem;
   cursor: pointer;
-  box-shadow: 0 8px 22px rgba(var(--accent-rgb), 0.35);
+  box-shadow: var(--shadow-btn);
   transition: box-shadow 0.2s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
 .filmstrip-continue-btn:hover {
-  box-shadow: 0 10px 28px rgba(var(--accent-rgb), 0.5);
+  box-shadow: 0 12px 30px -6px rgba(var(--pop-rgb), 0.55);
 }
 
 .filmstrip-continue-btn:focus-visible {

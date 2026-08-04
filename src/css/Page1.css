@@ -13,15 +13,15 @@
   align-items: center;
   justify-content: center;
 
-  /* Pale lavender melting into soft mint — the morning world */
+  /* Watercolor wash — several pastel pools that have bled into
+     the paper, never a single flat gradient. Tuned differently
+     from every other scene so no two pages share a composition. */
   background:
-    radial-gradient(
-      ellipse 90% 75% at 50% 18%,
-      var(--lav-light) 0%,
-      var(--lav) 38%,
-      var(--lav-ice) 66%,
-      var(--mint-ice) 100%
-    );
+    radial-gradient(ellipse 90% 55% at 12% 8%,   var(--lav-light) 0%, transparent 62%),
+    radial-gradient(ellipse 80% 60% at 88% 16%,   var(--mint-pale) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 60% at 50% 92%,  var(--lav) 0%, transparent 58%),
+    radial-gradient(ellipse 120% 80% at 50% 108%, var(--mint-ice) 0%, transparent 64%),
+    var(--lav-ice);
 }
 
 /* Light veil that fades out to reveal the scene */
@@ -33,10 +33,9 @@
   pointer-events: none;
 }
 
-/* ── Pollen motes (the old starfield, reimagined) ──
-   Soft floating points of light drifting upward like
-   sunlit dust — bright marks on a pale morning instead
-   of pinprick stars on night.                        */
+/* ── Soft floating orbs (the old starfield, reimagined) ──
+   Round blobs of light with soft falloff drifting like dust
+   on a sunbeam — gentle light, not pinprick stars on night.  */
 
 .starfield {
   position: absolute;
@@ -52,62 +51,59 @@
   animation-timing-function: ease-in-out;
 }
 
-/* Warm-white motes — the majority */
+/* Warm-white orbs — the majority */
 .star--white {
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.85);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 68%);
 }
 
-/* Bright lavender bokeh mid-size motes */
+/* Soft lavender orbs */
 .star--lavender {
-  background: #D8B7F5;
-  box-shadow: 0 0 9px 2px rgba(216, 183, 245, 0.9);
+  background: radial-gradient(circle, rgba(216, 183, 245, 0.85) 0%, rgba(216, 183, 245, 0) 68%);
 }
 
-/* Mint pollen — the larger, rarer motes */
+/* Mint orbs — the larger, rarer ones */
 .star--mint {
-  background: #9DE89F;
-  box-shadow: 0 0 11px 3px rgba(162, 245, 165, 0.75);
+  background: radial-gradient(circle, rgba(162, 245, 165, 0.85) 0%, rgba(162, 245, 165, 0) 68%);
 }
 
 @keyframes mote-drift {
-  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.35; }
-  50%      { transform: translateY(-18px) translateX(3px); opacity: 1; }
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.4; }
+  50%      { transform: translateY(-18px) translateX(3px); opacity: 0.9; }
 }
 
-/* A slow-drifting petal of light — the old shooting star */
-.shooting-star {
+/* ── Pressed petals drifting down the page ───────────
+   The old shooting star, reborn as a petal loosened from
+   a bloom — falls gently, spins, settles.                 */
+
+.falling-petal {
   position: absolute;
-  top: 8%;
-  left: -5%;
-  width: 14px;
-  height: 14px;
-  border-radius: 70% 70% 30% 30%;
-  background: linear-gradient(160deg, #FFFFFF 0%, #D8B7F5 60%, #9DE89F 100%);
-  box-shadow: 0 0 12px 4px rgba(233, 198, 255, 0.55);
-  animation: shoot 13s linear infinite;
-  animation-delay: 2s;
+  top: -6%;
+  left: -4%;
+  width: 15px;
+  height: 19px;
+  border-radius: 80% 20% 78% 22%;
+  background: linear-gradient(160deg, #FFFFFF 0%, #F2C3E4 55%, #BFF2C1 100%);
   opacity: 0;
+  animation: petal-fall 15s linear infinite;
+  animation-delay: 3s;
 }
 
-/* Second petal on a different track for variety */
-.shooting-star--late {
-  top: 26%;
-  left: -8%;
-  animation-delay: 8.5s;
+.falling-petal--late {
+  left: 18%;
+  animation-delay: 9.5s;
 }
 
-@keyframes shoot {
-  0%   { transform: translate(0, 0) rotate(-15deg) scale(0.6); opacity: 0; }
-  4%   { opacity: 0.9; }
-  12%  { transform: translate(70vw, 42vh) rotate(30deg) scale(1); opacity: 0; }
-  100% { transform: translate(70vw, 42vh) rotate(30deg) scale(1); opacity: 0; }
+@keyframes petal-fall {
+  0%   { transform: translate3d(0, -4vh, 0) rotate(0deg); opacity: 0; }
+  5%   { opacity: 0.85; }
+  55%  { transform: translate3d(24vw, 50vh, 0) rotate(140deg); opacity: 0.85; }
+  100% { transform: translate3d(44vw, 110vh, 0) rotate(300deg); opacity: 0; }
 }
 
-/* ── Soft morning-light rays ────────────────────────
-   Echoes of the old diagonal lens slashes, now blurred
-   pastel light falling through the garden. Still,
-   decorative, low presence.                            */
+/* ── Watercolor light pools ──────────────────────────
+   The old diagonal lens flares become organic pools of
+   pigment that have soaked into the paper — irregular,
+   soft, still.                                            */
 
 .flare-field {
   position: absolute;
@@ -119,77 +115,49 @@
 
 .flare {
   position: absolute;
-  border-radius: 999px;
-  transform-origin: center;
-  filter: blur(5px);
+  border-radius: 60% 40% 55% 45%;
+  filter: blur(26px);
 }
 
-/* Main lavender ray — lower left to upper right */
+/* Lavender pool — upper left */
 .flare-1 {
-  width: 55vw;
-  height: 10px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(233, 198, 255, 0.5) 40%,
-    rgba(255, 255, 255, 0.75) 55%,
-    rgba(199, 249, 199, 0.45) 70%,
-    transparent 100%
-  );
-  top: 62%;
-  left: -8%;
-  transform: rotate(-34deg);
-  opacity: 0.5;
+  width: 44vw;
+  height: 44vw;
+  background: radial-gradient(circle, rgba(233, 198, 255, 0.5) 0%, rgba(233, 198, 255, 0) 68%);
+  top: 2%;
+  left: -10%;
+  opacity: 0.85;
 }
 
-/* Mint ray — parallel, offset */
+/* Mint pool — lower right */
 .flare-2 {
-  width: 40vw;
-  height: 8px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(162, 245, 165, 0.4) 35%,
-    rgba(255, 255, 255, 0.6) 60%,
-    transparent 100%
-  );
-  top: 56%;
-  left: 5%;
-  transform: rotate(-34deg);
-  opacity: 0.45;
+  width: 38vw;
+  height: 38vw;
+  background: radial-gradient(circle, rgba(162, 245, 165, 0.45) 0%, rgba(162, 245, 165, 0) 68%);
+  bottom: 2%;
+  right: -8%;
+  opacity: 0.85;
 }
 
-/* Short bright white accent near center */
+/* Small pale pool — center-left, echoes the gift halo */
 .flare-3 {
-  width: 18vw;
-  height: 7px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.7) 50%,
-    transparent 100%
-  );
-  top: 58%;
-  left: 28%;
-  transform: rotate(-34deg);
-  filter: blur(3px);
-  opacity: 0.5;
+  width: 22vw;
+  height: 22vw;
+  background: radial-gradient(circle, rgba(234, 226, 249, 0.8) 0%, rgba(234, 226, 249, 0) 70%);
+  top: 40%;
+  left: 6%;
+  opacity: 0.7;
 }
 
-/* Thin lavender upper-right ghost */
+/* Thin lavender ghost high right */
 .flare-4 {
-  width: 25vw;
-  height: 7px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(229, 212, 249, 0.6) 50%,
-    transparent 100%
-  );
-  top: 22%;
-  right: 5%;
-  transform: rotate(-28deg);
-  opacity: 0.5;
+  width: 18vw;
+  height: 18vw;
+  background: radial-gradient(circle, rgba(229, 212, 249, 0.6) 0%, rgba(229, 212, 249, 0) 70%);
+  top: 16%;
+  right: 6%;
+  filter: blur(18px);
+  opacity: 0.7;
 }
 
 /* ── Gift box ───────────────────────────────────── */
@@ -213,21 +181,21 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Soft lavender→mint halo behind the box */
+/* Watercolor bleed halo behind the box — several pools that
+   bleed outward irregularly, like the ribbon soaked into the
+   paper. Pastel only: the berry stays reserved for the bow. */
 .gift-glow {
   position: absolute;
   top: 45%;
   left: 50%;
-  width: 260px;
-  height: 260px;
+  width: 280px;
+  height: 280px;
   transform: translate(-50%, -50%);
-  background: radial-gradient(
-    circle,
-    rgba(233, 198, 255, 0.6) 0%,
-    rgba(162, 245, 165, 0.28) 50%,
-    transparent 72%
-  );
-  filter: blur(14px);
+  background:
+    radial-gradient(circle at 42% 40%, rgba(233, 198, 255, 0.55) 0%, transparent 58%),
+    radial-gradient(circle at 62% 58%, rgba(162, 245, 165, 0.35) 0%, transparent 55%),
+    radial-gradient(circle at 52% 50%, rgba(234, 226, 249, 0.85) 0%, transparent 62%);
+  filter: blur(16px);
   pointer-events: none;
   animation: glow-breathe 4s ease-in-out infinite;
 }
@@ -236,11 +204,12 @@
   position: relative;
   width: clamp(140px, 32vw, 210px);
   filter:
-    drop-shadow(0 8px 18px rgba(var(--ink-rgb), 0.18))
-    drop-shadow(0 0 26px rgba(var(--lav-light-rgb), 0.8));
+    drop-shadow(0 10px 20px rgba(var(--ink-rgb), 0.16))
+    drop-shadow(0 16px 32px rgba(var(--pop-rgb), 0.14));
 }
 
-/* Orbiting bokeh sparks — white + mint, pastel glow */
+/* Orbiting pressed petals — the old bokeh sparks, reshaped
+   into tiny petals on a slow ring around the box */
 .gift-orbit {
   position: absolute;
   top: 45%;
@@ -259,42 +228,39 @@
 
 .orbit-spark {
   position: absolute;
-  border-radius: 50%;
+  border-radius: 72% 28% 72% 28%;
+  transform: rotate(45deg);
 }
 
 .orbit-spark-1 {
-  width: 7px;
-  height: 7px;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 0 8px 3px rgba(233, 198, 255, 0.9);
+  width: 8px;
+  height: 11px;
+  background: linear-gradient(160deg, #FFFFFF 0%, #F2C3E4 100%);
   top: 2%;
   left: 50%;
 }
 
 .orbit-spark-2 {
-  width: 6px;
-  height: 6px;
-  background: #A2F5A5;
-  box-shadow: 0 0 8px 3px rgba(162, 245, 165, 0.9);
+  width: 7px;
+  height: 10px;
+  background: linear-gradient(160deg, #CFF2CF 0%, #A2F5A5 100%);
   top: 72%;
   left: 10%;
 }
 
 .orbit-spark-3 {
-  width: 5px;
-  height: 5px;
-  background: #D8B7F5;
-  box-shadow: 0 0 6px 2px rgba(216, 183, 245, 0.9);
+  width: 7px;
+  height: 10px;
+  background: linear-gradient(160deg, #F0E0FB 0%, #D8B7F5 100%);
   top: 80%;
   left: 84%;
 }
 
-/* Tap hint — italic Fraunces in plum ink */
+/* Tap hint — handwritten as a small aside in the margin */
 .tap-hint {
-  font-family: 'Fraunces', serif;
-  font-style: italic;
-  font-size: 0.85rem;
-  letter-spacing: 0.07em;
+  font-family: var(--script);
+  font-size: 1.2rem;
+  letter-spacing: 0.02em;
   color: var(--ink);
   opacity: 0.72;
 }
