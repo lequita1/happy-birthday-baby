@@ -122,7 +122,7 @@ export default function MusicPlayer({ scene }) {
     const audio = audioRef.current;
     if (!audio || musicData.length === 0) return undefined;
 
-    audio.volume = 0.1;
+    audio.volume = 0.05;
     audio.src = musicData[0].src;
 
     const onPlay = () => {

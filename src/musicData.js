@@ -12,10 +12,10 @@
 export const musicData = [
   {
     id: '1',
-    title: 'Tsunami',
+    title: 'Strong Girl',
     artist: 'Niki',
-    src: '/music/tsunami.mp3',
-    cover: '/images/image.png',
+    src: '/music/strong.mp3',
+    cover: '/images/IMG_1407.jpg',
     gradient: ['#4D6FFF', '#8B1A1A'],
   },
 ];
