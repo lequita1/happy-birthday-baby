@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════
-   Page1 — Galactic Reveal (Buzz palette)
-   Crimson base · cobalt cuts · white flare slashes
+   Page1 — Gift Reveal ("first light" palette)
+   Pale lavender→mint morning · bokeh motes · soft rays
    ═══════════════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&display=swap');
@@ -13,26 +13,30 @@
   align-items: center;
   justify-content: center;
 
-  /* Deep crimson-to-near-black radial — the Buzz world */
+  /* Pale lavender melting into soft mint — the morning world */
   background:
     radial-gradient(
-      ellipse 80% 60% at 50% 35%,
-      #3D0812 0%,
-      #1A0508 50%,
-      #080202 100%
+      ellipse 90% 75% at 50% 18%,
+      var(--lav-light) 0%,
+      var(--lav) 38%,
+      var(--lav-ice) 66%,
+      var(--mint-ice) 100%
     );
 }
 
-/* White overlay that fades out to reveal the scene */
+/* Light veil that fades out to reveal the scene */
 .fade-veil {
   position: absolute;
   inset: 0;
-  background: #ffffff;
+  background: var(--lav-ice);
   z-index: 10;
   pointer-events: none;
 }
 
-/* ── Starfield ─────────────────────────────────── */
+/* ── Pollen motes (the old starfield, reimagined) ──
+   Soft floating points of light drifting upward like
+   sunlit dust — bright marks on a pale morning instead
+   of pinprick stars on night.                        */
 
 .starfield {
   position: absolute;
@@ -43,52 +47,50 @@
 .star {
   position: absolute;
   border-radius: 50%;
-  animation-name: twinkle;
+  animation-name: mote-drift;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
 }
 
-/* White pinprick stars — the majority */
+/* Warm-white motes — the majority */
 .star--white {
-  background: #ffffff;
-  box-shadow: 0 0 3px 0px rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.85);
 }
 
-/* Electric blue mid-size stars */
-.star--blue {
-  background: #4D6FFF;
-  box-shadow: 0 0 5px 1px rgba(77, 111, 255, 0.7);
+/* Bright lavender bokeh mid-size motes */
+.star--lavender {
+  background: #D8B7F5;
+  box-shadow: 0 0 9px 2px rgba(216, 183, 245, 0.9);
 }
 
-/* Rare large crimson glints */
-.star--crimson {
-  background: #FF3A3A;
-  box-shadow: 0 0 6px 2px rgba(255, 58, 58, 0.5);
+/* Mint pollen — the larger, rarer motes */
+.star--mint {
+  background: #9DE89F;
+  box-shadow: 0 0 11px 3px rgba(162, 245, 165, 0.75);
 }
 
-@keyframes twinkle {
-  0%, 100% { opacity: 0.1; }
-  50%       { opacity: 1; }
+@keyframes mote-drift {
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.35; }
+  50%      { transform: translateY(-18px) translateX(3px); opacity: 1; }
 }
 
-/* Shooting star: now cobalt-white */
+/* A slow-drifting petal of light — the old shooting star */
 .shooting-star {
   position: absolute;
   top: 8%;
   left: -5%;
-  width: 2px;
-  height: 2px;
-  border-radius: 50%;
-  background: #ffffff;
-  box-shadow:
-    0 0 8px 2px #ffffff,
-    0 0 20px 6px rgba(77, 111, 255, 0.6);
+  width: 14px;
+  height: 14px;
+  border-radius: 70% 70% 30% 30%;
+  background: linear-gradient(160deg, #FFFFFF 0%, #D8B7F5 60%, #9DE89F 100%);
+  box-shadow: 0 0 12px 4px rgba(233, 198, 255, 0.55);
   animation: shoot 13s linear infinite;
   animation-delay: 2s;
   opacity: 0;
 }
 
-/* Second meteor on a different track for variety */
+/* Second petal on a different track for variety */
 .shooting-star--late {
   top: 26%;
   left: -8%;
@@ -96,17 +98,16 @@
 }
 
 @keyframes shoot {
-  0%   { transform: translate(0, 0) rotate(-15deg);        opacity: 0; }
-  2%   { opacity: 1; }
-  12%  { transform: translate(70vw, 28vh) rotate(-15deg);  opacity: 0; }
-  100% { transform: translate(70vw, 28vh) rotate(-15deg);  opacity: 0; }
+  0%   { transform: translate(0, 0) rotate(-15deg) scale(0.6); opacity: 0; }
+  4%   { opacity: 0.9; }
+  12%  { transform: translate(70vw, 42vh) rotate(30deg) scale(1); opacity: 0; }
+  100% { transform: translate(70vw, 42vh) rotate(30deg) scale(1); opacity: 0; }
 }
 
-/* ── Lens-flare slashes (signature element) ─────── */
-
-/* Echo the diagonal white + blue light streaks
-   from the Buzz album art. Purely decorative,
-   perfectly still — atmosphere, not distraction.   */
+/* ── Soft morning-light rays ────────────────────────
+   Echoes of the old diagonal lens slashes, now blurred
+   pastel light falling through the garden. Still,
+   decorative, low presence.                            */
 
 .flare-field {
   position: absolute;
@@ -120,70 +121,75 @@
   position: absolute;
   border-radius: 999px;
   transform-origin: center;
+  filter: blur(5px);
 }
 
-/* Main white slash — lower left to upper right */
+/* Main lavender ray — lower left to upper right */
 .flare-1 {
   width: 55vw;
-  height: 1.5px;
+  height: 10px;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.55) 40%,
-    rgba(255, 255, 255, 0.9) 55%,
-    rgba(255, 255, 255, 0.3) 70%,
+    rgba(233, 198, 255, 0.5) 40%,
+    rgba(255, 255, 255, 0.75) 55%,
+    rgba(199, 249, 199, 0.45) 70%,
     transparent 100%
   );
   top: 62%;
   left: -8%;
   transform: rotate(-34deg);
+  opacity: 0.5;
 }
 
-/* Cobalt slash — parallel, offset */
+/* Mint ray — parallel, offset */
 .flare-2 {
   width: 40vw;
-  height: 1px;
+  height: 8px;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(77, 111, 255, 0.4) 35%,
-    rgba(120, 150, 255, 0.85) 60%,
+    rgba(162, 245, 165, 0.4) 35%,
+    rgba(255, 255, 255, 0.6) 60%,
     transparent 100%
   );
   top: 56%;
   left: 5%;
   transform: rotate(-34deg);
+  opacity: 0.45;
 }
 
 /* Short bright white accent near center */
 .flare-3 {
   width: 18vw;
-  height: 2px;
+  height: 7px;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0.7) 50%,
     transparent 100%
   );
   top: 58%;
   left: 28%;
   transform: rotate(-34deg);
-  filter: blur(0.5px);
+  filter: blur(3px);
+  opacity: 0.5;
 }
 
-/* Thin cobalt upper-right ghost */
+/* Thin lavender upper-right ghost */
 .flare-4 {
   width: 25vw;
-  height: 1px;
+  height: 7px;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(77, 111, 255, 0.25) 50%,
+    rgba(229, 212, 249, 0.6) 50%,
     transparent 100%
   );
   top: 22%;
   right: 5%;
   transform: rotate(-28deg);
+  opacity: 0.5;
 }
 
 /* ── Gift box ───────────────────────────────────── */
@@ -207,21 +213,21 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Cobalt glow replacing the old gold */
+/* Soft lavender→mint halo behind the box */
 .gift-glow {
   position: absolute;
   top: 45%;
   left: 50%;
-  width: 240px;
-  height: 240px;
+  width: 260px;
+  height: 260px;
   transform: translate(-50%, -50%);
   background: radial-gradient(
     circle,
-    rgba(30, 63, 216, 0.35) 0%,
-    rgba(30, 63, 216, 0.08) 50%,
-    transparent 70%
+    rgba(233, 198, 255, 0.6) 0%,
+    rgba(162, 245, 165, 0.28) 50%,
+    transparent 72%
   );
-  filter: blur(8px);
+  filter: blur(14px);
   pointer-events: none;
   animation: glow-breathe 4s ease-in-out infinite;
 }
@@ -230,11 +236,11 @@
   position: relative;
   width: clamp(140px, 32vw, 210px);
   filter:
-    drop-shadow(0 6px 18px rgba(0, 0, 0, 0.5))
-    drop-shadow(0 0 24px rgba(30, 63, 216, 0.25));
+    drop-shadow(0 8px 18px rgba(var(--ink-rgb), 0.18))
+    drop-shadow(0 0 26px rgba(var(--lav-light-rgb), 0.8));
 }
 
-/* Orbiting sparks — now white + cobalt */
+/* Orbiting bokeh sparks — white + mint, pastel glow */
 .gift-orbit {
   position: absolute;
   top: 45%;
@@ -257,38 +263,38 @@
 }
 
 .orbit-spark-1 {
-  width: 5px;
-  height: 5px;
-  background: #ffffff;
-  box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.8);
+  width: 7px;
+  height: 7px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 8px 3px rgba(233, 198, 255, 0.9);
   top: 2%;
   left: 50%;
 }
 
 .orbit-spark-2 {
-  width: 4px;
-  height: 4px;
-  background: #4D6FFF;
-  box-shadow: 0 0 6px 2px rgba(77, 111, 255, 0.8);
+  width: 6px;
+  height: 6px;
+  background: #A2F5A5;
+  box-shadow: 0 0 8px 3px rgba(162, 245, 165, 0.9);
   top: 72%;
   left: 10%;
 }
 
 .orbit-spark-3 {
-  width: 3px;
-  height: 3px;
-  background: #ffffff;
-  box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.6);
+  width: 5px;
+  height: 5px;
+  background: #D8B7F5;
+  box-shadow: 0 0 6px 2px rgba(216, 183, 245, 0.9);
   top: 80%;
   left: 84%;
 }
 
-/* Tap hint — white italic Fraunces */
+/* Tap hint — italic Fraunces in plum ink */
 .tap-hint {
   font-family: 'Fraunces', serif;
   font-style: italic;
   font-size: 0.85rem;
   letter-spacing: 0.07em;
-  color: #ffffff;
-  opacity: 0.75;
+  color: var(--ink);
+  opacity: 0.72;
 }

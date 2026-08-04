@@ -20,7 +20,7 @@ function useStarField(count) {
     return Array.from({ length: count }, (_, i) => {
       const roll = rng();
       const type =
-        roll < 0.65 ? 'white' : roll < 0.88 ? 'blue' : 'crimson';
+        roll < 0.6 ? 'white' : roll < 0.82 ? 'lavender' : 'mint';
       return {
         id: i,
         type,
@@ -28,10 +28,10 @@ function useStarField(count) {
         left: rng() * 100,
         size:
           type === 'white'
-            ? rng() * 1.4 + 0.5
-            : type === 'blue'
-            ? rng() * 2.2 + 1.2
-            : rng() * 3 + 2,
+            ? rng() * 1.8 + 0.8
+            : type === 'lavender'
+            ? rng() * 2.6 + 1.6
+            : rng() * 3.2 + 2.4,
         delay: rng() * 6,
         duration: rng() * 3 + 2.5,
       };
@@ -96,16 +96,16 @@ function GiftBox({ onOpen, reduceMotion }) {
             : { duration: 3.2, repeat: Infinity, ease: 'easeInOut' }
         }
       >
-        <rect x="32" y="76" width="136" height="82" rx="10" fill="#6B0F1A" />
+        <rect x="32" y="76" width="136" height="82" rx="10" fill="var(--lav-ice)" />
         <rect x="32" y="76" width="136" height="82" rx="10" fill="url(#boxShade)" />
-        <rect x="90" y="76" width="20" height="82" fill="#1E3FD8" />
+        <rect x="90" y="76" width="20" height="82" fill="var(--mint)" />
         
         <motion.ellipse
           cx="100"
           cy="80"
           rx="58"
           ry="16"
-          fill="#FFF3D6"
+          fill="#FFFFFF"
           initial={{ opacity: 0 }}
           animate={{ opacity: opening ? 0.9 : 0 }}
           transition={{ duration: 0.35, delay: opening ? 0.15 : 0 }}
@@ -117,15 +117,15 @@ function GiftBox({ onOpen, reduceMotion }) {
           animate={{ rotate: opening ? -28 : 0, y: opening ? -6 : 0 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
-          <rect x="20" y="46" width="160" height="34" rx="9" fill="#8B1A1A" />
-          <rect x="90" y="46" width="20" height="34" fill="#1E3FD8" />
+          <rect x="20" y="46" width="160" height="34" rx="9" fill="var(--lav)" />
+          <rect x="90" y="46" width="20" height="34" fill="var(--mint)" />
           <path
             d="M100 46 C 78 30, 55 34, 62 52 C 68 62, 90 54, 100 46 Z"
-            fill="#E8EEFF"
+            fill="var(--mint-ice)"
           />
           <path
             d="M100 46 C 122 30, 145 34, 138 52 C 132 62, 110 54, 100 46 Z"
-            fill="#E8EEFF"
+            fill="var(--mint-ice)"
           />
           <circle cx="100" cy="47" r="7" fill="#FFFFFF" />
           <rect x="20" y="46" width="160" height="8" rx="9" fill="url(#lidHighlight)" opacity="0.3" />
@@ -133,8 +133,8 @@ function GiftBox({ onOpen, reduceMotion }) {
 
         <defs>
           <linearGradient id="boxShade" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#ffffff" stopOpacity="0.06" />
-            <stop offset="1" stopColor="#000000" stopOpacity="0.18" />
+            <stop offset="0" stopColor="#ffffff" stopOpacity="0.25" />
+            <stop offset="1" stopColor="#3B2A4D" stopOpacity="0.08" />
           </linearGradient>
           <linearGradient id="lidHighlight" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor="#ffffff" stopOpacity="1" />

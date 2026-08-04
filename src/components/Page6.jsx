@@ -15,6 +15,7 @@ import '../css/Page6.css';
 //    file can't be found, so the flow never dead-ends.
 // ─────────────────────────────────────────────────────────────
 
+const KICKER_TEXT = 'saved the best for last';
 const HEADING_TEXT = 'one more thing';
 const HINT_TEXT = 'tap to play · sound on';
 const CONTINUE_LABEL = 'continue';
@@ -23,11 +24,13 @@ const VIDEO_SRC = '/videos/vid1.mp4';
 function PlayOverlay({ onPlay }) {
   return (
     <button type="button" className="video-play-overlay" onClick={onPlay} aria-label="Play video">
+      <span className="video-play-shimmer" aria-hidden="true" />
       <span className="video-play-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="30" height="30">
           <path d="M8 5v14l11-7z" fill="#ffffff" />
         </svg>
       </span>
+      <span className="video-play-label">{HINT_TEXT}</span>
     </button>
   );
 }
@@ -66,24 +69,35 @@ export default function VideoScene({ onNext }) {
         <span className="vf vf-2" />
       </div>
 
-      <h2 className="video-heading">{HEADING_TEXT}</h2>
+      <div className="video-heading-block">
+        <p className="video-kicker">{KICKER_TEXT}</p>
+        <h2 className="video-heading">{HEADING_TEXT}</h2>
+      </div>
 
-      <div className="video-frame">
-        <video
-          ref={videoRef}
-          src={VIDEO_SRC}
-          className="video-element"
-          controls={started}
-          playsInline
-          preload="auto"
-          onEnded={() => setFinished(true)}
-          onError={() => setFailed(true)}
-        />
-        {!started && !failed && <PlayOverlay onPlay={handlePlay} />}
+      <div className="video-frame-wrap">
+        <div className="film-strip" aria-hidden="true" />
+        <div className={`video-frame${started ? ' is-playing' : ''}`}>
+          <video
+            ref={videoRef}
+            src={VIDEO_SRC}
+            className="video-element"
+            controls={started}
+            playsInline
+            preload="auto"
+            onEnded={() => setFinished(true)}
+            onError={() => setFailed(true)}
+          />
+          {started && <span className="video-sheen" aria-hidden="true" />}
+          {!started && !failed && <PlayOverlay onPlay={handlePlay} />}
+        </div>
+        <div className="film-strip" aria-hidden="true" />
+        <span className="video-corner video-corner--tl" aria-hidden="true" />
+        <span className="video-corner video-corner--tr" aria-hidden="true" />
+        <span className="video-corner video-corner--bl" aria-hidden="true" />
+        <span className="video-corner video-corner--br" aria-hidden="true" />
       </div>
 
       {failed && <p className="video-failed-note">the clip is still loading — continue anyway</p>}
-      {!failed && <span className="video-hint">{HINT_TEXT}</span>}
 
       <div className="video-continue-wrap">
         <AnimatePresence>

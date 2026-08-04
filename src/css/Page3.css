@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════
-   Page3 — Typewriter Message (Buzz palette)
+   Page3 — Typewriter Message (light palette)
    ═══════════════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,300&family=Inter:wght@400&display=swap');
@@ -12,10 +12,11 @@
   overflow: hidden;
   background:
     radial-gradient(
-      ellipse 80% 60% at 50% 35%,
-      #3D0812 0%,
-      #1A0508 55%,
-      #080202 100%
+      ellipse 90% 75% at 50% 18%,
+      var(--lav-light) 0%,
+      var(--lav) 38%,
+      var(--lav-ice) 66%,
+      var(--mint-ice) 100%
     );
 }
 
@@ -30,11 +31,11 @@
   transform: translate(-50%, -50%);
   background: radial-gradient(
     ellipse at center,
-    rgba(30, 63, 216, 0.15) 0%,
-    rgba(30, 63, 216, 0.04) 55%,
-    transparent 70%
+    rgba(233, 198, 255, 0.55) 0%,
+    rgba(162, 245, 165, 0.25) 55%,
+    transparent 72%
   );
-  filter: blur(28px);
+  filter: blur(34px);
   pointer-events: none;
   z-index: 0;
 }
@@ -50,48 +51,46 @@
 .mf {
   position: absolute;
   border-radius: 999px;
+  filter: blur(5px);
 }
 
 .mf-1 {
   width: 32vw;
-  height: 1px;
+  height: 8px;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255,255,255,0.18) 40%,
-    rgba(255,255,255,0.38) 60%,
+    rgba(255, 255, 255, 0.5) 40%,
+    rgba(255, 255, 255, 0.75) 60%,
     transparent 100%
   );
   bottom: 16%;
   left: -4%;
   transform: rotate(-34deg);
+  opacity: 0.45;
 }
 
 .mf-2 {
   width: 20vw;
-  height: 1px;
+  height: 7px;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(77,111,255,0.25) 50%,
+    rgba(162, 245, 165, 0.5) 50%,
     transparent 100%
   );
   bottom: 20%;
   left: 10%;
   transform: rotate(-34deg);
+  opacity: 0.4;
 }
 
-/* ── Play prompt — redesigned ─────────────────────────
-   Everything visual (halo, rotating ring, icon) lives inside
-   .play-icon-stack, a fixed 108×108 box that is itself centered
-   by the flex column below. Because the ring/halo are anchored
-   to *that box's* center (not the whole button's), they always
-   line up with the icon exactly — regardless of the hint text
-   sitting underneath. That mismatch was the old bug.
-
-   Ring rotation is done with a CSS conic-gradient + keyframe,
-   not JS/Framer — cheaper, and it runs everywhere (motion is
-   intentionally not gated, matching the rest of the site).    */
+/* ── Play prompt ────────────────────────────────────
+   Same co-centered stack structure as before — the ring,
+   halo and icon all anchor to .play-icon-stack's center.
+   The glass is now light: a violet-filled disc with a
+   white triangle, ringed by a rotating lavender→mint band
+   and breathing pastel halo.                            */
 
 .play-prompt {
   position: relative;
@@ -120,8 +119,7 @@
   justify-content: center;
 }
 
-/* Soft ambient halo — cobalt into crimson, ties back to the
-   gift box glow from Page1 */
+/* Soft ambient halo — lavender into mint */
 .play-halo {
   position: absolute;
   top: 50%;
@@ -132,16 +130,16 @@
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(30, 63, 216, 0.30) 0%,
-    rgba(139, 26, 26, 0.14) 45%,
+    rgba(233, 198, 255, 0.65) 0%,
+    rgba(162, 245, 165, 0.35) 45%,
     transparent 72%
   );
-  filter: blur(20px);
+  filter: blur(24px);
   pointer-events: none;
   animation: glow-breathe 4.5s ease-in-out infinite;
 }
 
-/* Rotating gradient ring — conic-gradient masked to a thin band */
+/* Rotating gradient ring — lavender to mint band */
 .play-ring {
   position: absolute;
   top: 50%;
@@ -152,14 +150,14 @@
   transform: translate(-50%, -50%) rotate(0deg);
   background: conic-gradient(
     from 0deg,
-    #4D6FFF 0%,
-    #E8EEFF 25%,
-    #FF3A3A 50%,
-    #4D6FFF 100%
+    var(--accent) 0%,
+    var(--lav-ice) 25%,
+    var(--mint) 50%,
+    var(--accent) 100%
   );
   -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2.5px));
           mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2.5px));
-  opacity: 0.85;
+  opacity: 0.9;
   animation: play-ring-spin 7s linear infinite;
   pointer-events: none;
 }
@@ -169,7 +167,7 @@
   to   { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* Glass icon — the visual tap target */
+/* Glass icon — a violet-filled disc that pops on light */
 .play-icon {
   position: relative;
   width: 76px;
@@ -178,26 +176,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(160deg, rgba(139, 26, 26, 0.55), rgba(8, 2, 2, 0.72));
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(6px);
+  background: linear-gradient(160deg, #6A4E9E 0%, var(--accent) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
-    0 8px 24px rgba(0, 0, 0, 0.45),
-    0 0 28px rgba(30, 63, 216, 0.3);
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 10px 26px rgba(var(--accent-rgb), 0.4),
+    0 0 30px rgba(var(--lav-light-rgb), 0.9);
   transition: box-shadow 0.25s ease;
 }
 
 .play-prompt:hover .play-icon {
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
-    0 8px 28px rgba(0, 0, 0, 0.5),
-    0 0 36px rgba(30, 63, 216, 0.45);
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 12px 30px rgba(var(--accent-rgb), 0.5),
+    0 0 38px rgba(var(--lav-light-rgb), 1);
 }
 
 /* Nudge the triangle for optical centering instead of padding */
 .play-icon svg {
   transform: translateX(2px);
+  filter: drop-shadow(0 1px 3px rgba(59, 42, 77, 0.35));
 }
 
 .play-hint {
@@ -206,9 +204,8 @@
   font-style: italic;
   font-size: 0.85rem;
   letter-spacing: 0.05em;
-  color: #ffffff;
+  color: var(--ink);
   opacity: 0.8;
-  text-shadow: 0 0 24px rgba(255, 255, 255, 0.15);
 }
 
 /* ── Scrollable text region ─────────────────────────
@@ -243,10 +240,9 @@
   font-weight: 300;
   font-size: clamp(1.15rem, 3.5vw, 1.65rem);
   line-height: 1.75;
-  color: #ffffff;
+  color: var(--ink);
   margin: 0;
   letter-spacing: 0.01em;
-  text-shadow: 0 0 40px rgba(255, 255, 255, 0.08);
 }
 
 /* ── Blinking cursor ─────────────────────────────── */
@@ -256,7 +252,7 @@
   margin-left: 1px;
   font-style: normal;
   font-weight: 300;
-  color: #4D6FFF;
+  color: var(--accent);
   vertical-align: baseline;
 }
 
@@ -285,7 +281,7 @@
   right: 0;
   bottom: 0;
   height: clamp(5rem, 14vw, 7rem);
-  background: linear-gradient(to top, #080202 0%, rgba(8, 2, 2, 0) 100%);
+  background: linear-gradient(to top, var(--lav-ice) 0%, rgba(var(--lav-ice-rgb), 0) 100%);
   pointer-events: none;
   z-index: -1;
 }
@@ -293,26 +289,25 @@
 .continue-btn {
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 0.75rem;
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: lowercase;
-  color: #ffffff;
-  background: rgba(8, 2, 2, 0.55);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(77, 111, 255, 0.5);
+  color: #F4EEFF;
+  background: var(--accent);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 999px;
   padding: 0.65rem 2.4rem;
   cursor: pointer;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  box-shadow: 0 8px 22px rgba(var(--accent-rgb), 0.35);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
 .continue-btn:hover {
-  border-color: rgba(77, 111, 255, 0.9);
-  background: rgba(77, 111, 255, 0.12);
+  box-shadow: 0 10px 28px rgba(var(--accent-rgb), 0.5);
 }
 
 .continue-btn:focus-visible {
-  outline: 2px solid #4D6FFF;
+  outline: 2px solid var(--accent);
   outline-offset: 4px;
 }

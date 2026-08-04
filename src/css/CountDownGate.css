@@ -47,7 +47,7 @@
   font-optical-sizing: auto;
   font-weight: 500;
   font-size: clamp(2.5rem, 9vw, 4.5rem);
-  color: #1a1a1a;
+  color: var(--ink);
   line-height: 1;
 }
 
@@ -56,7 +56,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #585858;
+  color: rgba(var(--ink-rgb), 0.6);
 }
 
 .countdown-hint {
@@ -64,6 +64,6 @@
   font-style: italic;
   font-size: 1.5rem;
   letter-spacing: 0.04em;
-  color: #ce551d;
+  color: var(--accent);
   animation: glow-breathe 3.4s ease-in-out infinite;
 }

@@ -68,21 +68,21 @@ function useFlowerField() {
 function OpenBox() {
   return (
     <svg viewBox="0 0 200 170" className="open-box-svg">
-      <rect x="32" y="76" width="136" height="82" rx="10" fill="#6B0F1A" />
+      <rect x="32" y="76" width="136" height="82" rx="10" fill="var(--lav-ice)" />
       <rect x="32" y="76" width="136" height="82" rx="10" fill="url(#boxShade2)" />
-      <rect x="90" y="76" width="20" height="82" fill="#1E3FD8" />
-      <ellipse cx="100" cy="80" rx="58" ry="16" fill="#FFF3D6" opacity="0.85" />
+      <rect x="90" y="76" width="20" height="82" fill="var(--mint)" />
+      <ellipse cx="100" cy="80" rx="58" ry="16" fill="#FFFFFF" opacity="0.85" />
       <g transform="rotate(-28 100 80) translate(0 -6)">
-        <rect x="20" y="46" width="160" height="34" rx="9" fill="#8B1A1A" />
-        <rect x="90" y="46" width="20" height="34" fill="#1E3FD8" />
-        <path d="M100 46 C 78 30, 55 34, 62 52 C 68 62, 90 54, 100 46 Z" fill="#E8EEFF" />
-        <path d="M100 46 C 122 30, 145 34, 138 52 C 132 62, 110 54, 100 46 Z" fill="#E8EEFF" />
+        <rect x="20" y="46" width="160" height="34" rx="9" fill="var(--lav)" />
+        <rect x="90" y="46" width="20" height="34" fill="var(--mint)" />
+        <path d="M100 46 C 78 30, 55 34, 62 52 C 68 62, 90 54, 100 46 Z" fill="var(--mint-ice)" />
+        <path d="M100 46 C 122 30, 145 34, 138 52 C 132 62, 110 54, 100 46 Z" fill="var(--mint-ice)" />
         <circle cx="100" cy="47" r="7" fill="#FFFFFF" />
       </g>
       <defs>
         <linearGradient id="boxShade2" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#ffffff" stopOpacity="0.06" />
-          <stop offset="1" stopColor="#000000" stopOpacity="0.18" />
+          <stop offset="0" stopColor="#ffffff" stopOpacity="0.25" />
+          <stop offset="1" stopColor="#3B2A4D" stopOpacity="0.08" />
         </linearGradient>
       </defs>
     </svg>

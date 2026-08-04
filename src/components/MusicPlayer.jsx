@@ -3,17 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { musicData } from '../musicData';
 import '../css/MusicPlayer.css';
 
-// ─────────────────────────────────────────────────────────────
-// MusicPlayer — mini Spotify-style player, persistent across
-// every scene.
-//
-// The <audio> element lives here, at the App root OUTSIDE the
-// AnimatePresence scene flow, so the track keeps playing (and
-// the current position is kept) no matter which page is shown.
-// It floats at the bottom-left; tap the note button to open the
-// panel. Tracks are defined in src/musicData.js.
-// ─────────────────────────────────────────────────────────────
-
 const fmtTime = (s) => {
   if (!Number.isFinite(s) || s < 0) return '0:00';
   const m = Math.floor(s / 60);
@@ -129,6 +118,7 @@ export default function MusicPlayer() {
     const audio = audioRef.current;
     if (!audio || musicData.length === 0) return undefined;
 
+    audio.volume = 0.1;
     audio.src = musicData[0].src;
 
     const onPlay = () => {
@@ -156,8 +146,6 @@ export default function MusicPlayer() {
       audio.removeEventListener('ended', onEnded);
       audio.removeEventListener('error', onError);
     };
-    // `next` is stable (only depends on the stable `select`), so
-    // this effect attaches once and never resets the playing src.
   }, [next]);
 
   useEffect(() => {

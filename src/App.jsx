@@ -100,9 +100,6 @@ export default function App() {
         />
       )}
       </AnimatePresence>
-
-      {/* Persistent across every scene — lives outside AnimatePresence
-          so the audio element and track position survive scene switches. */}
       <MusicPlayer />
     </>
   );

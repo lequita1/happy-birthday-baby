@@ -1,17 +1,7 @@
-// Shared ambient background layers for the Buzz palette.
-// Both are pure CSS animations (transform + opacity only) so they
-// stay cheap on phones, and both are decorative (aria-hidden).
-//
-//   <Nebula /> — large soft gradient blobs drifting very slowly,
-//                like a living galaxy behind each scene.
-//   <Aurora /> — wide soft gradient ribbons slowly swaying across
-//                the scene, like northern lights. No dots — pure
-//                color fields in the palette.
-
 const NEBULA_BLOBS = [
-  { id: 1, top: -8,  left: -14, size: 52, color: '77, 111, 255', opacity: 0.5,  duration: 34, dx: 14, dy: -7 },
-  { id: 2, top: 52,  left: 52,  size: 58, color: '255, 58, 58',  opacity: 0.38, duration: 44, dx: -12, dy: 9 },
-  { id: 3, top: 24,  left: 30,  size: 44, color: '206, 85, 29',  opacity: 0.34, duration: 39, dx: 8,  dy: 12 },
+  { id: 1, top: -8,  left: -14, size: 52, color: '233, 198, 255', opacity: 0.72, duration: 34, dx: 14, dy: -7 },
+  { id: 2, top: 52,  left: 52,  size: 58, color: '199, 249, 199', opacity: 0.6,  duration: 44, dx: -12, dy: 9 },
+  { id: 3, top: 24,  left: 30,  size: 44, color: '234, 226, 249', opacity: 0.85, duration: 39, dx: 8,  dy: 12 },
 ];
 
 export function Nebula() {
@@ -39,9 +29,9 @@ export function Nebula() {
 }
 
 const AURORA_BANDS = [
-  { id: 1, top: 12, width: 120, color: '77, 111, 255', opacity: 0.5,  duration: 26, sway: 7,  rotate: -12, delay: -3 },
-  { id: 2, top: 46, width: 100, color: '255, 58, 58',  opacity: 0.42, duration: 32, sway: -8, rotate: 9,  delay: -16 },
-  { id: 3, top: 78, width: 130, color: '206, 85, 29',  opacity: 0.4,  duration: 29, sway: 6,  rotate: -6,  delay: -24 },
+  { id: 1, top: 12, width: 120, color: '233, 198, 255', opacity: 0.45, duration: 26, sway: 7,  rotate: -12, delay: -3 },
+  { id: 2, top: 46, width: 100, color: '199, 249, 199', opacity: 0.5,  duration: 32, sway: -8, rotate: 9,  delay: -16 },
+  { id: 3, top: 78, width: 130, color: '234, 226, 249', opacity: 0.6,  duration: 29, sway: 6,  rotate: -6,  delay: -24 },
 ];
 
 export function Aurora() {

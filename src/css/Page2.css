@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════
-   Page2 — Flower Burst (Buzz palette)
+   Page2 — Flower Burst (light palette)
    ═══════════════════════════════════════════════════ */
 
 .burst-scene {
@@ -11,10 +11,11 @@
   justify-content: center;
   background:
     radial-gradient(
-      ellipse 80% 60% at 50% 35%,
-      #3D0812 0%,
-      #1A0508 50%,
-      #080202 100%
+      ellipse 90% 75% at 50% 18%,
+      var(--lav-light) 0%,
+      var(--lav) 38%,
+      var(--lav-ice) 66%,
+      var(--mint-ice) 100%
     );
 }
 
@@ -29,8 +30,8 @@
 .open-box-svg {
   width: clamp(140px, 32vw, 210px);
   filter:
-    drop-shadow(0 6px 18px rgba(0, 0, 0, 0.5))
-    drop-shadow(0 0 24px rgba(30, 63, 216, 0.25));
+    drop-shadow(0 8px 18px rgba(var(--ink-rgb), 0.18))
+    drop-shadow(0 0 26px rgba(var(--lav-light-rgb), 0.8));
 }
 
 /* Tiny central flash – no full-screen repaint */
@@ -43,7 +44,8 @@
   margin-left: -10px;
   margin-top: -10px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 24px 10px rgba(233, 198, 255, 0.65);
   pointer-events: none;
   z-index: 10;
 }

@@ -1,9 +1,10 @@
 /* ─────────────────────────────────────────────────────
    Global base — scene styles live in src/css per page.
-   The "Buzz" world is dark burgundy-to-black, so the
-   page base matches (#080202) to keep every scene
-   full-bleed with no white flashes behind them. Scenes
-   bring their own gradients on top of this.
+
+   Design language: "first light through the garden".
+   A pale lavender→mint morning world. All surface/text
+   colors come from the token set below; scenes layer
+   their own gradients on top of the light page base.
 
    The document is locked to the viewport (app-style):
    the page itself never scrolls or pans — every scene
@@ -12,9 +13,31 @@
    ───────────────────────────────────────────────────── */
 
 :root {
-  background: #080202;
-  color: #ffffff;
-  color-scheme: dark;
+  /* ── Client palette (fixed) ─────────────────────── */
+  --lav-light: #E9C6FF;   /* lightest lavender — gradient start */
+  --lav:       #E5D4F9;   /* pale lavender */
+  --lav-ice:   #EAE2F9;   /* near-white lavender — lightest surface */
+  --mint-ice:  #EAF9E9;   /* near-white mint — secondary surface */
+  --mint-pale: #C7F9C7;   /* pale mint */
+  --mint:      #A2F5A5;   /* mint green — gradient end / fills */
+
+  /* ── Derived support tokens ─────────────────────── */
+  --ink:       #3B2A4D;   /* deep aubergine-plum — all text (8.6:1 vs bgs) */
+  --accent:    #5B3D8F;   /* deep lavender-violet — links/focus/hints/buttons (5.6:1) */
+
+  /* ── Shared rgb() triplets for alpha composition ── */
+  --ink-rgb:        59, 42, 77;
+  --accent-rgb:     91, 61, 143;
+  --lav-light-rgb:  233, 198, 255;
+  --lav-rgb:        229, 212, 249;
+  --lav-ice-rgb:    234, 226, 249;
+  --mint-ice-rgb:   234, 249, 233;
+  --mint-pale-rgb:  199, 249, 199;
+  --mint-rgb:       162, 245, 165;
+
+  background: var(--lav-ice);
+  color: var(--ink);
+  color-scheme: light;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -36,7 +59,7 @@ body {
   height: 100%;
   margin: 0;
   overflow: hidden;
-  background: #080202;
+  background: var(--lav-ice);
   overscroll-behavior: none;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
@@ -62,15 +85,15 @@ button {
    effect. Defined here once; every scene CSS uses them.
    ───────────────────────────────────────────────────── */
 
-/* Lens-flare lines gently brighten and dim */
+/* Soft light-rays gently brighten and dim */
 @keyframes flare-shimmer {
-  0%, 100% { opacity: 0.3; }
-  50%      { opacity: 1; }
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 0.9; }
 }
 
 /* Background glows breathe in and out like light */
 @keyframes glow-breathe {
-  0%, 100% { opacity: 0.78; }
+  0%, 100% { opacity: 0.7; }
   50%      { opacity: 1; }
 }
 
@@ -80,10 +103,12 @@ button {
   50%      { transform: translateY(-7px); }
 }
 
-/* ── Shared ambient layers: living nebula + aurora ribbons ──
+/* ── Shared ambient layers: pastel bokeh + morning rays ──
    Rendered as first children of each scene (z-index 0) so they
    sit behind the content. Drift is transform-only; blur is static
-   so the compositor handles everything cheaply.                */
+   so the compositor handles everything cheaply. The old night-sky
+   nebula/aurora read is gone — these are huge soft-focus color
+   orbs (lavender → mint → cream) drifting like bokeh.          */
 
 /* Large soft gradient blobs drifting very slowly */
 .ambient-nebula {
@@ -92,7 +117,7 @@ button {
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  filter: blur(50px);
+  filter: blur(60px);
 }
 
 .ambient-blob {
@@ -107,14 +132,14 @@ button {
   50%      { transform: translate3d(var(--dx, 6vmax), var(--dy, -4vh), 0) scale(1.12); }
 }
 
-/* Wide soft gradient ribbons slowly swaying across the scene */
+/* Gentle diagonal morning-light bands swaying slowly */
 .ambient-aurora {
   position: absolute;
   inset: 0;
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  filter: blur(46px);
+  filter: blur(48px);
 }
 
 .aurora-band {
@@ -138,7 +163,8 @@ button {
   50%      { transform: translateX(var(--band-sway)) rotate(calc(var(--band-rotate) + 4deg)); }
 }
 
-/* Occasional wide light sweep gliding across the scene */
+/* Occasional wide light sweep gliding across the scene —
+   soft and blurred now so it reads as daylight, not a flare */
 .light-sweep {
   position: absolute;
   top: -25%;
@@ -150,11 +176,12 @@ button {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.04) 40%,
-    rgba(255, 255, 255, 0.12) 50%,
-    rgba(255, 255, 255, 0.04) 60%,
+    rgba(255, 255, 255, 0.18) 40%,
+    rgba(255, 255, 255, 0.42) 50%,
+    rgba(255, 255, 255, 0.18) 60%,
     transparent 100%
   );
+  filter: blur(14px);
   transform: rotate(14deg) translateX(-200%);
   animation: light-sweep 16s ease-in-out infinite;
 }
@@ -165,3 +192,5 @@ button {
   18%  { transform: rotate(14deg) translateX(500%); opacity: 0; }
   100% { transform: rotate(14deg) translateX(500%); opacity: 0; }
 }
+
+

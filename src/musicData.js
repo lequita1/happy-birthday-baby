@@ -12,10 +12,10 @@
 export const musicData = [
   {
     id: '1',
-    title: 'Your song',
-    artist: 'Replace me',
-    src: '/audio/track-1.mp3',
-    cover: null,
+    title: 'Tsunami',
+    artist: 'Niki',
+    src: '/music/tsunami.mp3',
+    cover: '/images/image.png',
     gradient: ['#4D6FFF', '#8B1A1A'],
   },
 ];
